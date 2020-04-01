@@ -23,7 +23,6 @@ Funzionalità extra
 + Le celle della lista possono essere visualizzate utilizzando diversi stili (griglia e lista)
 + La toolbar di questa schermata ha le seguenti opzioni
     + Mostra/Nascondi preferiti
-    + Mostra/Nascondi film adulti
     + Mostra/Nascondi film nascosti
     + Refresh
     + Impostazioni
