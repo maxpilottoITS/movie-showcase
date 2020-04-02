@@ -1,11 +1,15 @@
 package com.maxpilotto.movieshowcase.models;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.maxpilotto.movieshowcase.protocols.Storable;
+import com.maxpilotto.movieshowcase.services.DataProvider;
 
 import java.util.Calendar;
 import java.util.List;
+
+import static com.maxpilotto.movieshowcase.util.Util.calendarOf;
 
 /**
  * Movie model
@@ -25,6 +29,19 @@ public class Movie implements Storable {
     private Integer voteAverage;
     private Boolean starred;
     private Integer rating;
+
+    public Movie(Cursor cursor) {
+        this.id = cursor.getInt(cursor.getColumnIndex("id"));
+        this.title = cursor.getString(cursor.getColumnIndex("title"));
+        this.overview = cursor.getString(cursor.getColumnIndex("overview"));
+        this.releaseDate = calendarOf(cursor.getLong(cursor.getColumnIndex("releaseDate")));
+        this.posterPath = cursor.getString(cursor.getColumnIndex("posterPath"));
+        this.coverPath = cursor.getString(cursor.getColumnIndex("coverPath"));
+        this.voteAverage = cursor.getInt(cursor.getColumnIndex("voteAverage"));
+        this.genres = DataProvider.get().getMovieGenres(id);
+        this.starred = cursor.getInt(cursor.getColumnIndex("starred")) > 0;
+        this.rating = cursor.getInt(cursor.getColumnIndex("rating"));
+    }
 
     public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, List<Genre> genres, Integer voteAverage) {
         this(id, title, overview, releaseDate, posterPath, coverPath, genres, voteAverage, false, 0);

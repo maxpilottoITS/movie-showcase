@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.maxpilotto.movieshowcase.R;
+import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.services.DataProvider;
 
 public class DetailActivity extends AppCompatActivity {
@@ -52,14 +53,13 @@ public class DetailActivity extends AppCompatActivity {
 
     private void loadContent() {
         Integer id = getIntent().getIntExtra(MainActivity.ID_EXTRA, 0);
+        Movie movie = DataProvider.get().getLocalMovie(id); //TODO All db calls should be async
 
-        DataProvider.get().getMovie(id, movie -> {
-            title.setText(movie.getTitle());
-            overview.setText(movie.getOverview());
+        title.setText(movie.getTitle());
+        overview.setText(movie.getOverview());
 
-            Glide.with(this)
-                    .load(movie.getCoverPath())
-                    .into(backdrop);
-        });
+        Glide.with(this)
+                .load(movie.getCoverPath())
+                .into(backdrop);
     }
 }

@@ -43,11 +43,13 @@ public class MainActivity extends AppCompatActivity {
         list.setLayoutManager(new GridLayoutManager(this, 2));
         list.setAdapter(adapter);
 
-        DataProvider.get().getMovies(localCopy -> {
+        DataProvider.get().getMovies(movies -> {
             dataSource.clear();
-            dataSource.addAll(localCopy);
+            dataSource.addAll(movies);
 
             adapter.notifyDataSetChanged();
+
+            System.out.println("Loaded!");
         });
     }
 }

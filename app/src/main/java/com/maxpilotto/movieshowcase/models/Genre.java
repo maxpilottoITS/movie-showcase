@@ -1,6 +1,7 @@
 package com.maxpilotto.movieshowcase.models;
 
 import android.content.ContentValues;
+import android.database.Cursor;
 
 import com.maxpilotto.movieshowcase.protocols.Storable;
 
@@ -14,6 +15,11 @@ import com.maxpilotto.movieshowcase.protocols.Storable;
 public class Genre implements Storable {
     private Integer id;
     private String name;
+
+    public Genre(Cursor cursor) {
+        this.id = cursor.getInt(cursor.getColumnIndex("id"));
+        this.name = cursor.getString(cursor.getColumnIndex("name"));
+    }
 
     public Genre(Integer id, String name) {
         this.id = id;

@@ -26,21 +26,26 @@ public final class Util {
         return "https://image.tmdb.org/t/p/original/" + path;
     }
 
-    public static void asyncTask(AsyncTaskSimpleCallback callback) {
-        new AsyncTask<Void, Void, Void>() {
+    public static AsyncTask asyncTask(Boolean autoStart, AsyncTaskSimpleCallback callback) {
+        AsyncTask task =  new AsyncTask() {
             @Override
-            protected Void doInBackground(Void... voids) {
-                callback.run();
-
+            protected Object doInBackground(Object[] objects) {
+                callback.run(this);
                 return null;
             }
 
             @Override
-            protected void onPostExecute(Void aVoid) {
-                super.onPostExecute(aVoid);
+            protected void onPostExecute(Object o) {
+                super.onPostExecute(o);
 
                 callback.onComplete();
             }
-        }.execute();
+        };
+
+        if (autoStart){
+            task.execute();
+        }
+
+        return task;
     }
 }
