@@ -6,6 +6,7 @@ import com.maxpilotto.kon.JsonArray;
 import com.maxpilotto.kon.JsonObject;
 import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
+import com.maxpilotto.movieshowcase.protocols.MovieResultCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieUpdateCallback;
 
 import java.util.ArrayList;
@@ -29,6 +30,19 @@ public final class DataProvider {
     }
 
     private DataProvider() {
+    }
+
+    public void getMovie(Integer id, MovieResultCallback callback) {
+        getMovies(localCopy -> {
+            for (Movie m : localCopy) {
+                if (m.getId().equals(id)){
+                    callback.onFind(m);
+                    return;
+                }
+            }
+
+            callback.onFind(null);
+        });
     }
 
     public void getMovies(MovieUpdateCallback callback) {

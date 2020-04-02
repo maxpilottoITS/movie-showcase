@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String ID_EXTRA = "movie.id.extra";
+
     private RecyclerView list;
     private MovieAdapter adapter;
     private List<Movie> dataSource;
@@ -32,7 +34,10 @@ public class MainActivity extends AppCompatActivity {
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
         adapter.setClickListener(item -> {
-            startActivity(new Intent(this, DetailActivity.class));
+            Intent intent = new Intent(this, DetailActivity.class);
+            intent.putExtra(ID_EXTRA,item.getId());
+
+            startActivity(intent);
         });
 
         list.setLayoutManager(new GridLayoutManager(this, 2));
