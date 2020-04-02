@@ -4,7 +4,6 @@ import android.content.ContentValues;
 
 import com.maxpilotto.movieshowcase.protocols.Storable;
 
-import java.net.URL;
 import java.util.Calendar;
 import java.util.List;
 
@@ -20,18 +19,18 @@ public class Movie implements Storable {
     private String title;
     private String overview;
     private Calendar releaseDate;
-    private URL posterPath;
-    private URL coverPath;
+    private String posterPath;
+    private String coverPath;
     private List<Genre> genres;
     private Integer voteAverage;
     private Boolean starred;
     private Integer rating;
 
-    public Movie(Integer id, String title, String overview, Calendar releaseDate, URL posterPath, URL coverPath, List<Genre> genres, Integer voteAverage) {
+    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, List<Genre> genres, Integer voteAverage) {
         this(id, title, overview, releaseDate, posterPath, coverPath, genres, voteAverage, false, 0);
     }
 
-    public Movie(Integer id, String title, String overview, Calendar releaseDate, URL posterPath, URL coverPath, List<Genre> genres, Integer voteAverage, Boolean starred, Integer rating) {
+    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, List<Genre> genres, Integer voteAverage, Boolean starred, Integer rating) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -52,8 +51,8 @@ public class Movie implements Storable {
         values.put("title", title);
         values.put("overview", overview);
         values.put("releaseDate", releaseDate.getTimeInMillis());
-        values.put("posterPath", posterPath.getRef());
-        values.put("coverPath", coverPath.getRef());
+        values.put("posterPath", posterPath);
+        values.put("coverPath", coverPath);
 //            put("genres", genres)
         values.put("voteAverage", voteAverage);
         values.put("starred", starred);
@@ -78,11 +77,11 @@ public class Movie implements Storable {
         return releaseDate;
     }
 
-    public URL getPosterPath() {
+    public String getPosterPath() {
         return posterPath;
     }
 
-    public URL getCoverPath() {
+    public String getCoverPath() {
         return coverPath;
     }
 

@@ -15,6 +15,11 @@ public class Genre implements Storable {
     private Integer id;
     private String name;
 
+    public Genre(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
     @Override
     public ContentValues values() {
         ContentValues values = new ContentValues();
