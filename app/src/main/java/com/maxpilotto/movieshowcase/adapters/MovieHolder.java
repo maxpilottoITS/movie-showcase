@@ -27,7 +27,7 @@ public class MovieHolder extends RecyclerView.ViewHolder {
 
     public void bind(Movie movie,ListItemClickListener<Movie> clickListener) {
         Glide.with(context)
-                .load(movie.getPosterPath().toString())
+                .load(movie.getPosterPath())
                 .into(poster);
 
         root.setOnClickListener(v -> {
