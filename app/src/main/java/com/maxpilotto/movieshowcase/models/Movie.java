@@ -3,8 +3,8 @@ package com.maxpilotto.movieshowcase.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.protocols.Storable;
-import com.maxpilotto.movieshowcase.services.DataProvider;
 
 import java.util.Calendar;
 import java.util.List;
@@ -38,7 +38,7 @@ public class Movie implements Storable {
         this.posterPath = cursor.getString(cursor.getColumnIndex("posterPath"));
         this.coverPath = cursor.getString(cursor.getColumnIndex("coverPath"));
         this.voteAverage = cursor.getInt(cursor.getColumnIndex("voteAverage"));
-        this.genres = DataProvider.get().getMovieGenres(id);
+        this.genres = Database.get().getMovieGenres(id);
         this.starred = cursor.getInt(cursor.getColumnIndex("starred")) > 0;
         this.rating = cursor.getInt(cursor.getColumnIndex("rating"));
     }
@@ -58,6 +58,22 @@ public class Movie implements Storable {
         this.voteAverage = voteAverage;
         this.starred = starred;
         this.rating = rating;
+    }
+
+    @Override
+    public String toString() {
+        return "Movie{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", overview='" + overview + '\'' +
+                ", releaseDate=" + releaseDate +
+                ", posterPath='" + posterPath + '\'' +
+                ", coverPath='" + coverPath + '\'' +
+                ", genres=" + genres +
+                ", voteAverage=" + voteAverage +
+                ", starred=" + starred +
+                ", rating=" + rating +
+                '}';
     }
 
     @Override

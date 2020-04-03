@@ -1,6 +1,7 @@
 package com.maxpilotto.movieshowcase.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -9,8 +10,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
+import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Movie;
+import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.services.DataProvider;
 
 public class DetailActivity extends AppCompatActivity {
@@ -53,7 +56,7 @@ public class DetailActivity extends AppCompatActivity {
 
     private void loadContent() {
         Integer id = getIntent().getIntExtra(MainActivity.ID_EXTRA, 0);
-        Movie movie = DataProvider.get().getLocalMovie(id); //TODO All db calls should be async
+        Movie movie = Database.get().getLocalMovie(id);     //TODO All db calls should be async
 
         title.setText(movie.getTitle());
         overview.setText(movie.getOverview());

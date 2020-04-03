@@ -1,19 +1,21 @@
 package com.maxpilotto.movieshowcase.services;
 
+import android.content.ContentValues;
 import android.content.Context;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.maxpilotto.kon.JsonRequest;
+import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
-import com.maxpilotto.movieshowcase.persistance.MovieDatabaseHelper;
+import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
-import com.maxpilotto.movieshowcase.protocols.MovieResultCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieUpdateCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
+import com.maxpilotto.movieshowcase.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +30,11 @@ import static com.maxpilotto.movieshowcase.util.Util.posterOf;
  */
 public final class DataProvider {
     private static DataProvider instance;
-    private SQLiteDatabase database;
+    private ConnectivityManager connectivityManager;
 
     public static void init(Context context) {
         instance = new DataProvider();
-        instance.database = new MovieDatabaseHelper(context).getWritableDatabase();
+        instance.connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         Routes.API_KEY = context.getString(R.string.api_key);
     }
@@ -45,12 +47,16 @@ public final class DataProvider {
     }
 
     public void getMovies(MovieUpdateCallback callback) {
-        AsyncTask remote = asyncTask(false, new AsyncTaskSimpleCallback() {
+        // Task that fetches the data from the service and then saves
+        // the data inside the local db
+        AsyncTask remote = asyncTask(new AsyncTaskSimpleCallback() {
             List<Genre> genres;
             List<Movie> movies;
 
             @Override
             public void run(AsyncTask task) {
+                Database database = Database.get();
+
                 genres = JsonRequest
                         .fetchObjectSync(Routes.genres())
                         .getObjectList("genres", jsonObject -> {
@@ -64,6 +70,7 @@ public final class DataProvider {
                         .getObjectList("results", jsonObject -> {
                             List<Integer> genreIds = jsonObject.getIntList("genre_ids");
                             List<Genre> genreList = new ArrayList<>();
+                            Integer movieId = jsonObject.getInt("id");
 
                             for (Genre g : genres) {
                                 if (genreIds.contains(g.getId())) {
@@ -71,8 +78,10 @@ public final class DataProvider {
                                 }
                             }
 
+                            Database.get().insertMovieGenres(genreList, movieId);
+
                             return new Movie(
-                                    jsonObject.getInt("id"),
+                                    movieId,
                                     jsonObject.getString("title"),
                                     jsonObject.getString("overview"),
                                     jsonObject.getCalendar("release_date", "yyyy-MM-dd", Locale.getDefault()),
@@ -83,11 +92,18 @@ public final class DataProvider {
                             );
                         });
 
-                // Call the callback once again if data was changed
+                for (Movie m : movies) {
+                    ContentValues values = m.values();
 
-                //TODO Save genres to the db
-                //TODO Save movies to the db
-                //TODO Save movie_genres to the db
+                    values.remove("starred");
+                    values.remove("rating");
+
+                    database.insertOrUpdate(values, "movies");
+                }
+
+                Database.get().insertOrUpdate(genres, "genres");
+
+                Log.d(App.TAG, "Movies downloaded from the service, records: " + movies.size());
             }
 
             @Override
@@ -96,56 +112,33 @@ public final class DataProvider {
             }
         });
 
-        asyncTask(true, new AsyncTaskSimpleCallback() {
+        // Task that loads the data from the local db
+        // This data is not available on the first run
+        AsyncTask local = asyncTask(new AsyncTaskSimpleCallback() {
             List<Movie> movies;
 
             @Override
             public void run(AsyncTask task) {
-                movies = getLocalMovies();
+                movies = Database.get().getLocalMovies();
+
+                Log.d(App.TAG, "Movies loaded from the local db, records: " + movies.size());
             }
 
             @Override
             public void onComplete() {
                 callback.onLoad(movies);
 
-                remote.execute();
+                // Update only if there's an active connection
+                if (Util.isConnected(connectivityManager)) {
+                    remote.execute();
+
+                    Log.d(App.TAG, "Connected, will look for updates");
+                } else {
+                    Log.d(App.TAG, "Not connected, won't look for updates");
+                }
             }
         });
-    }
 
-    public Movie getLocalMovie(Integer id) {
-        Cursor cursor = database.rawQuery("SELECT * FROM movies WHERE id=" + id, null);
-
-        if (cursor.getCount() <= 0) {
-            cursor.close();
-            return null;
-        } else {
-            cursor.close();
-            return new Movie(cursor);
-        }
-    }
-
-    public List<Movie> getLocalMovies() {
-        List<Movie> movies = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM movies", null);
-
-        while (cursor.moveToNext()) {
-            movies.add(new Movie(cursor));
-        }
-
-        cursor.close();
-        return movies;
-    }
-
-    public List<Genre> getMovieGenres(Integer movie) {
-        List<Genre> genres = new ArrayList<>();
-        Cursor cursor = database.rawQuery("SELECT * FROM genres WHERE movie=" + movie, null);
-
-        while (cursor.moveToNext()) {
-            genres.add(new Genre(cursor));
-        }
-
-        cursor.close();
-        return genres;
+        local.execute();
     }
 }

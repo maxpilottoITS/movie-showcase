@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
             dataSource.addAll(movies);
 
             adapter.notifyDataSetChanged();
-
-            System.out.println("Loaded!");
         });
     }
 }
