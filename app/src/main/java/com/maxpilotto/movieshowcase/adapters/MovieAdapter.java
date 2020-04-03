@@ -9,13 +9,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Movie;
-import com.maxpilotto.movieshowcase.protocols.ListItemClickListener;
+import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 
 import java.util.List;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
     private List<Movie> source;
-    private ListItemClickListener<Movie> clickListener;
+    private MovieCellCallback callback;
 
     public MovieAdapter(List<Movie> source) {
         this.source = source;
@@ -31,7 +31,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
-        holder.bind(source.get(position),clickListener);
+        holder.bind(source.get(position), callback);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
         return source.size();
     }
 
-    public void setClickListener(ListItemClickListener<Movie> clickListener) {
-        this.clickListener = clickListener;
+    public void setMovieCallback(MovieCellCallback callback) {
+        this.callback = callback;
     }
 }

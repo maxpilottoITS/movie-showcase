@@ -2,6 +2,7 @@ package com.maxpilotto.movieshowcase.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +11,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
+import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
 import com.maxpilotto.movieshowcase.models.Movie;
+import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.services.DataProvider;
 
 import java.util.ArrayList;
@@ -33,11 +36,35 @@ public class MainActivity extends AppCompatActivity {
 
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
-        adapter.setClickListener(item -> {
-            Intent intent = new Intent(this, DetailActivity.class);
-            intent.putExtra(ID_EXTRA,item.getId());
+        adapter.setMovieCallback(new MovieCellCallback() {
+            @Override
+            public void onClick(Movie item) {
+                Intent intent = new Intent(MainActivity.this, DetailActivity.class);
+                intent.putExtra(ID_EXTRA, item.getId());
 
-            startActivity(intent);
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFavourite(Movie item) {
+                //TODO Update dd
+                //TODO Update list
+                //TODO Refresh list
+
+                item.toggleFavourite();
+            }
+
+            @Override
+            public void onRate(Movie item) {
+                RatingDialog dialog = new RatingDialog(item.getRating());
+
+                dialog.setCallback(rating -> {
+                    item.setRating(rating);
+
+                    Toast.makeText(MainActivity.this, "Rated: " + rating, Toast.LENGTH_SHORT).show();
+                });
+                dialog.show(getSupportFragmentManager(), null);
+            }
         });
 
         list.setLayoutManager(new GridLayoutManager(this, 2));

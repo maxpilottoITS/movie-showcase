@@ -15,7 +15,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
             "posterPath TEXT," +
             "coverPath TEXT," +
             "voteAverage INTEGER," +
-            "starred INTEGER," +
+            "favourite INTEGER," +
             "rating INTEGER)";
     private static final String TABLE_GENRES = "CREATE TABLE genres(" +
             "id INTEGER PRIMARY KEY," +

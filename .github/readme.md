@@ -1,5 +1,5 @@
 # MovieShowcase
-Demo application that shows a library of recent movies that can be starred and rated
+Demo application that shows a library of recent movies that can be favourite and rated
 
 ## Building
 Before building the application you need an api key, you can retrieve the api key from your 

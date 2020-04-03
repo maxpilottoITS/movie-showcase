@@ -95,7 +95,7 @@ public final class DataProvider {
                 for (Movie m : movies) {
                     ContentValues values = m.values();
 
-                    values.remove("starred");
+                    values.remove("favourite");
                     values.remove("rating");
 
                     database.insertOrUpdate(values, "movies");

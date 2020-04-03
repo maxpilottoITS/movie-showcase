@@ -27,7 +27,7 @@ public class Movie implements Storable {
     private String coverPath;
     private List<Genre> genres;
     private Integer voteAverage;
-    private Boolean starred;
+    private Boolean favourite;
     private Integer rating;
 
     public Movie(Cursor cursor) {
@@ -39,7 +39,7 @@ public class Movie implements Storable {
         this.coverPath = cursor.getString(cursor.getColumnIndex("coverPath"));
         this.voteAverage = cursor.getInt(cursor.getColumnIndex("voteAverage"));
         this.genres = Database.get().getMovieGenres(id);
-        this.starred = cursor.getInt(cursor.getColumnIndex("starred")) > 0;
+        this.favourite = cursor.getInt(cursor.getColumnIndex("favourite")) > 0;
         this.rating = cursor.getInt(cursor.getColumnIndex("rating"));
     }
 
@@ -47,7 +47,7 @@ public class Movie implements Storable {
         this(id, title, overview, releaseDate, posterPath, coverPath, genres, voteAverage, false, 0);
     }
 
-    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, List<Genre> genres, Integer voteAverage, Boolean starred, Integer rating) {
+    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, List<Genre> genres, Integer voteAverage, Boolean favourite, Integer rating) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -56,7 +56,7 @@ public class Movie implements Storable {
         this.coverPath = coverPath;
         this.genres = genres;
         this.voteAverage = voteAverage;
-        this.starred = starred;
+        this.favourite = favourite;
         this.rating = rating;
     }
 
@@ -71,7 +71,7 @@ public class Movie implements Storable {
                 ", coverPath='" + coverPath + '\'' +
                 ", genres=" + genres +
                 ", voteAverage=" + voteAverage +
-                ", starred=" + starred +
+                ", favourite=" + favourite +
                 ", rating=" + rating +
                 '}';
     }
@@ -88,10 +88,16 @@ public class Movie implements Storable {
         values.put("coverPath", coverPath);
 //            put("genres", genres)
         values.put("voteAverage", voteAverage);
-        values.put("starred", starred);
+        values.put("favourite", favourite);
         values.put("rating", rating);
 
         return values;
+    }
+
+    public Boolean toggleFavourite() {
+        favourite = !favourite;
+
+        return favourite;
     }
 
     public Integer getId() {
@@ -126,12 +132,12 @@ public class Movie implements Storable {
         return voteAverage;
     }
 
-    public Boolean getStarred() {
-        return starred;
+    public Boolean getFavourite() {
+        return favourite;
     }
 
-    public void setStarred(Boolean starred) {
-        this.starred = starred;
+    public void setFavourite(Boolean favourite) {
+        this.favourite = favourite;
     }
 
     public Integer getRating() {

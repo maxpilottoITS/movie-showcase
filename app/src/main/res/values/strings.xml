@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MovieShowcase</string>
+    <string name="ratingTitle">Rate this movie</string>
+    <string name="ok">Ok</string>
 </resources>
