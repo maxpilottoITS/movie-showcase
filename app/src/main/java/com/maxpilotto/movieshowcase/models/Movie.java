@@ -93,8 +93,9 @@ public class Movie implements Storable {
     }
 
     /**
-     * Returns the ContentValues with the
-     * @return
+     * Returns a ContentValues instance with all the values from this model
+     *
+     * The {@link Movie#values()} method will return only the values sent by the web service
      */
     public ContentValues allValues() {
         ContentValues values = values();
@@ -103,6 +104,10 @@ public class Movie implements Storable {
         values.put("rating", rating);
 
         return values;
+    }
+
+    public Integer getYear() {
+        return releaseDate.get(Calendar.YEAR);
     }
 
     public Boolean toggleFavourite() {

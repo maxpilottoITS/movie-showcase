@@ -16,10 +16,15 @@ import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.services.DataProvider;
 
+import java.util.Calendar;
+
 public class DetailActivity extends AppCompatActivity {
     private ImageView backdrop;
     private TextView title;
     private TextView overview;
+    private TextView userRating;
+    private TextView personalRating;
+    private TextView year;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,6 +34,9 @@ public class DetailActivity extends AppCompatActivity {
         backdrop = findViewById(R.id.backdrop);
         title = findViewById(R.id.title);
         overview = findViewById(R.id.overview);
+        userRating = findViewById(R.id.userRating);
+        personalRating = findViewById(R.id.personalRating);
+        year = findViewById(R.id.year);
 
         loadContent();
 
@@ -60,6 +68,9 @@ public class DetailActivity extends AppCompatActivity {
 
         title.setText(movie.getTitle());
         overview.setText(movie.getOverview());
+        userRating.setText(getString(R.string.userRating,movie.getVoteAverage()));
+        personalRating.setText(getString(R.string.yourRating,movie.getRating()));
+        year.setText(getString(R.string.year,movie.getYear()));
 
         Glide.with(this)
                 .load(movie.getCoverPath())

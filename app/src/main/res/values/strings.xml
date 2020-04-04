@@ -1,5 +1,8 @@
 <resources>
     <string name="app_name">MovieShowcase</string>
     <string name="ratingTitle">Rate this movie</string>
-    <string name="ok">Ok</string>
+    <string name="ok">OK</string>
+    <string name="userRating">User rating: %d/10</string>
+    <string name="yourRating">Your rating: %d/5</string>
+    <string name="year">Year: %d</string>
 </resources>
