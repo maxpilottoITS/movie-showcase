@@ -6,6 +6,10 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
 
 import java.util.Calendar;
@@ -39,7 +43,7 @@ public final class Util {
     public static AsyncTask asyncTask(Boolean autoStart, AsyncTaskSimpleCallback callback) {
         AsyncTask task = asyncTask(callback);
 
-        if (autoStart){
+        if (autoStart) {
             task.execute();
         }
 
@@ -77,5 +81,17 @@ public final class Util {
 
     public static Cursor rawQuery(SQLiteDatabase database, String query) {
         return rawQuery(database, query, new Object[0]);
+    }
+
+    public static Integer scrollPositionOf(RecyclerView recyclerView) {
+        RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+
+        if (lm instanceof GridLayoutManager) {
+            return ((GridLayoutManager) lm).findFirstVisibleItemPosition();
+        } else if (lm instanceof LinearLayoutManager) {
+            return ((LinearLayoutManager) lm).findFirstVisibleItemPosition();
+        }
+
+        return -1;
     }
 }

@@ -1,12 +1,14 @@
 package com.maxpilotto.movieshowcase.activities;
 
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
-import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.maxpilotto.movieshowcase.R;
@@ -19,6 +21,8 @@ import com.maxpilotto.movieshowcase.services.DataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.maxpilotto.movieshowcase.util.Util.scrollPositionOf;
 
 public class MainActivity extends AppCompatActivity {
     public static final String ID_EXTRA = "movie.id.extra";
@@ -37,6 +41,18 @@ public class MainActivity extends AppCompatActivity {
 
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
+
+        loadContent();
+
+        DataProvider.get().getMovies(movies -> {
+            dataSource.clear();
+            dataSource.addAll(movies);
+
+            adapter.notifyDataSetChanged();
+        });
+    }
+
+    private void loadContent() {
         adapter.setEmptyView(findViewById(R.id.emptyView));
         adapter.setMovieCallback(new MovieCellCallback() {
             @Override
@@ -68,11 +84,14 @@ public class MainActivity extends AppCompatActivity {
         list.setLayoutManager(new GridLayoutManager(this, 2));
         list.setAdapter(adapter);
 
-        DataProvider.get().getMovies(movies -> {
-            dataSource.clear();
-            dataSource.addAll(movies);
+        switch (getResources().getConfiguration().orientation) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                list.setLayoutManager(new GridLayoutManager(this, 2));
+                break;
 
-            adapter.notifyDataSetChanged();
-        });
+            case Configuration.ORIENTATION_LANDSCAPE:
+                list.setLayoutManager(new LinearLayoutManager(this));
+                break;
+        }
     }
 }

@@ -1,6 +1,6 @@
 package com.maxpilotto.movieshowcase.adapters;
 
-import android.content.Context;
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,8 +27,15 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
     @Override
     public MovieHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View root = LayoutInflater.from(parent.getContext()).inflate(R.layout.cell_movie, parent, false);
+        int orientation = parent.getContext().getResources().getConfiguration().orientation;
 
-        return new MovieHolder(root);
+        if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+            return new PortraitMovieHolder(root);
+        } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            return new LandscapeMovieHolder(root);
+        }
+
+        return null;
     }
 
     @Override

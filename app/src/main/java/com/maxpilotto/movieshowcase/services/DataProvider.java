@@ -117,9 +117,10 @@ public final class DataProvider {
             public void onComplete() {
                 callback.onLoad(movies);
 
-                // Update only if there's an active connection
                 if (Util.isConnected(connectivityManager)) {
-                    remote.execute();
+                    if (movies.isEmpty()) {
+                        remote.execute();
+                    }
 
                     Log.d(App.TAG, "Connected, will look for updates");
                 } else {
