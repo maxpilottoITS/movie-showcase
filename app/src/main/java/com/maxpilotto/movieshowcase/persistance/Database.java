@@ -4,7 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
+import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.protocols.Storable;
@@ -36,20 +38,15 @@ public class Database {
         }
     }
 
-    public void insertOrUpdate(ContentValues values, String table) {
-        if (insert(values, table) == -1) {
-            database.update(
-                    table,
-                    values,
-                    "id=?",
-                    new String[]{values.getAsString("id")}
-            );
-        }
-    }
-
     public <T extends Storable> void insert(List<Storable> values, String table) {
         for (Storable value : values) {
             insert(value.values(), table);
+        }
+    }
+
+    public void insertOrUpdate(ContentValues values, String table) {
+        if (insert(values, table) == -1) {
+            update(values,table);
         }
     }
 
@@ -60,6 +57,12 @@ public class Database {
                 values,
                 SQLiteDatabase.CONFLICT_IGNORE
         );
+    }
+
+    public void update(ContentValues values, String table) {
+        int result = database.update(table,values,"id=?",new String[]{values.getAsString("id")});
+
+        Log.d(App.TAG, "Updated: " + result);
     }
 
     public void insertMovies(List<Movie> movies) {
@@ -101,7 +104,7 @@ public class Database {
 
     public List<Movie> getLocalMovies() {
         List<Movie> movies = new ArrayList<>();
-        Cursor cursor = rawQuery(database, "SELECT * FROM movies");
+        Cursor cursor = rawQuery(database, "SELECT * FROM movies DESC");
 
         while (cursor.moveToNext()) {
             movies.add(new Movie(cursor));

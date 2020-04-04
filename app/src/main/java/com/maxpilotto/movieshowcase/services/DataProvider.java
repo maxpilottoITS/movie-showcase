@@ -6,7 +6,7 @@ import android.net.ConnectivityManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.maxpilotto.kon.JsonRequest;
+import com.maxpilotto.kon.net.JsonService;
 import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Genre;
@@ -47,38 +47,37 @@ public final class DataProvider {
     }
 
     public void getMovies(MovieUpdateCallback callback) {
+        final Database database = Database.get();
+
         // Task that fetches the data from the service and then saves
         // the data inside the local db
         AsyncTask remote = asyncTask(new AsyncTaskSimpleCallback() {
-            List<Genre> genres;
             List<Movie> movies;
 
             @Override
             public void run(AsyncTask task) {
-                Database database = Database.get();
-
-                genres = JsonRequest
-                        .fetchObjectSync(Routes.genres())
+                List<Genre> remoteGenres = JsonService
+                        .fetchObject(Routes.genres())
                         .getObjectList("genres", jsonObject -> {
                             return new Genre(
                                     jsonObject.getInt("id"),
                                     jsonObject.getString("name")
                             );
                         });
-                movies = JsonRequest
-                        .fetchObjectSync(Routes.discover(1))
+                List<Movie> remoteMovies = JsonService
+                        .fetchObject(Routes.discover(1))
                         .getObjectList("results", jsonObject -> {
                             List<Integer> genreIds = jsonObject.getIntList("genre_ids");
                             List<Genre> genreList = new ArrayList<>();
                             Integer movieId = jsonObject.getInt("id");
 
-                            for (Genre g : genres) {
+                            for (Genre g : remoteGenres) {
                                 if (genreIds.contains(g.getId())) {
                                     genreList.add(g);
                                 }
                             }
 
-                            Database.get().insertMovieGenres(genreList, movieId);
+                            database.insertMovieGenres(genreList, movieId);
 
                             return new Movie(
                                     movieId,
@@ -92,18 +91,10 @@ public final class DataProvider {
                             );
                         });
 
-                for (Movie m : movies) {
-                    ContentValues values = m.values();
+                database.insertOrUpdate(remoteMovies, "movies");
+                database.insertOrUpdate(remoteGenres, "genres");
 
-                    values.remove("favourite");
-                    values.remove("rating");
-
-                    database.insertOrUpdate(values, "movies");
-                }
-
-                Database.get().insertOrUpdate(genres, "genres");
-
-                Log.d(App.TAG, "Movies downloaded from the service, records: " + movies.size());
+                movies = database.getLocalMovies();
             }
 
             @Override
@@ -114,14 +105,12 @@ public final class DataProvider {
 
         // Task that loads the data from the local db
         // This data is not available on the first run
-        AsyncTask local = asyncTask(new AsyncTaskSimpleCallback() {
+        asyncTask(true, new AsyncTaskSimpleCallback() {
             List<Movie> movies;
 
             @Override
             public void run(AsyncTask task) {
-                movies = Database.get().getLocalMovies();
-
-                Log.d(App.TAG, "Movies loaded from the local db, records: " + movies.size());
+                movies = database.getLocalMovies();
             }
 
             @Override
@@ -138,7 +127,5 @@ public final class DataProvider {
                 }
             }
         });
-
-        local.execute();
     }
 }

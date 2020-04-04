@@ -13,6 +13,7 @@ import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
 import com.maxpilotto.movieshowcase.models.Movie;
+import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.services.DataProvider;
 
@@ -47,11 +48,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFavourite(Movie item) {
-                //TODO Update dd
+                //TODO Update db
                 //TODO Update list
                 //TODO Refresh list
-
-                item.toggleFavourite();
+                Database.get().update(item.allValues(),"movies");
             }
 
             @Override
@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.setCallback(rating -> {
                     item.setRating(rating);
 
-                    Toast.makeText(MainActivity.this, "Rated: " + rating, Toast.LENGTH_SHORT).show();
+                    Database.get().update(item.allValues(),"movies");
                 });
                 dialog.show(getSupportFragmentManager(), null);
             }

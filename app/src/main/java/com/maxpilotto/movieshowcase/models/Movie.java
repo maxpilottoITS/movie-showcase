@@ -88,6 +88,17 @@ public class Movie implements Storable {
         values.put("coverPath", coverPath);
 //            put("genres", genres)
         values.put("voteAverage", voteAverage);
+
+        return values;
+    }
+
+    /**
+     * Returns the ContentValues with the
+     * @return
+     */
+    public ContentValues allValues() {
+        ContentValues values = values();
+
         values.put("favourite", favourite);
         values.put("rating", rating);
 

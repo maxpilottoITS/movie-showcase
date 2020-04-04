@@ -36,6 +36,16 @@ public final class Util {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
+    public static AsyncTask asyncTask(Boolean autoStart, AsyncTaskSimpleCallback callback) {
+        AsyncTask task = asyncTask(callback);
+
+        if (autoStart){
+            task.execute();
+        }
+
+        return task;
+    }
+
     public static AsyncTask asyncTask(AsyncTaskSimpleCallback callback) {
         AsyncTask task = new AsyncTask() {
             @Override
@@ -62,10 +72,10 @@ public final class Util {
             arguments[i] = args[i].toString();
         }
 
-        return database.rawQuery(query,arguments);
+        return database.rawQuery(query, arguments);
     }
 
     public static Cursor rawQuery(SQLiteDatabase database, String query) {
-        return rawQuery(database,query,new Object[0]);
+        return rawQuery(database, query, new Object[0]);
     }
 }
