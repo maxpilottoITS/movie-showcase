@@ -20,7 +20,7 @@ public class Database {
 
     public static void init(Context context) {
         instance = new Database();
-        instance.database = new MovieDatabaseHelper(context).getWritableDatabase();
+        instance.database = new DatabaseHelper(context).getWritableDatabase();
     }
 
     public static Database get() {

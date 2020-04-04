@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-public class MovieDatabaseHelper extends SQLiteOpenHelper {
+public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_MOVIES = "CREATE TABLE movies(" +
             "id INTEGER PRIMARY KEY," +
             "title TEXT," +
@@ -27,7 +27,7 @@ public class MovieDatabaseHelper extends SQLiteOpenHelper {
             "FOREIGN KEY(movie) REFERENCES movies(id)," +
             "FOREIGN KEY(genre) REFERENCES genres(id))";
 
-    public MovieDatabaseHelper(@Nullable Context context) {
+    public DatabaseHelper(@Nullable Context context) {
         super(context, "MovieShowcase", null, 1);
     }
 
