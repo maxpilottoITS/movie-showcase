@@ -1,5 +1,6 @@
 package com.maxpilotto.movieshowcase.adapters;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
     private List<Movie> source;
     private MovieCellCallback callback;
+    private View emptyView;
 
     public MovieAdapter(List<Movie> source) {
         this.source = source;
@@ -36,7 +38,19 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     @Override
     public int getItemCount() {
+        if (emptyView != null) {
+            if (source.isEmpty()) {
+                emptyView.setVisibility(View.VISIBLE);
+            } else {
+                emptyView.setVisibility(View.INVISIBLE);
+            }
+        }
+
         return source.size();
+    }
+
+    public void setEmptyView(View view) {
+        this.emptyView = view;
     }
 
     public void setMovieCallback(MovieCellCallback callback) {

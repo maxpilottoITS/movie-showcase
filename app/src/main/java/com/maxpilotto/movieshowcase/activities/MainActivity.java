@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
 
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
+        adapter.setEmptyView(findViewById(R.id.emptyView));
         adapter.setMovieCallback(new MovieCellCallback() {
             @Override
             public void onClick(Movie item) {
@@ -48,10 +49,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFavourite(Movie item) {
-                //TODO Update db
-                //TODO Update list
-                //TODO Refresh list
-                Database.get().update(item.allValues(),"movies");
+                Database.get().update(item.allValues(), "movies");
             }
 
             @Override
@@ -61,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.setCallback(rating -> {
                     item.setRating(rating);
 
-                    Database.get().update(item.allValues(),"movies");
+                    Database.get().update(item.allValues(), "movies");
                 });
                 dialog.show(getSupportFragmentManager(), null);
             }
