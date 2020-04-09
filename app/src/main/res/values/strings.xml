@@ -6,4 +6,7 @@
     <string name="yourRating">Your rating: %d/5</string>
     <string name="year">Year: %d</string>
     <string name="emptyMovieList">No movies found</string>
+    <string name="loading">Loading</string>
+    <string name="loadingMessage">Please wait ...</string>
+    <string name="noInternet">No internet connection found</string>
 </resources>

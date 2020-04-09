@@ -1,8 +1,10 @@
 package com.maxpilotto.movieshowcase.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,7 +12,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.google.android.material.snackbar.Snackbar;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
@@ -29,9 +33,12 @@ public class MainActivity extends AppCompatActivity {
 
     private RecyclerView list;
     private MovieAdapter adapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private List<Movie> dataSource;
+    private DataProvider dataProvider;
     private Boolean shouldUpdate = true;
     private Integer lastPage = 1;
+    private ProgressDialog loadingDialog;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -47,20 +54,26 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
 
         list = findViewById(R.id.listView);
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
 
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
+        dataProvider = DataProvider.get();
 
         restoreData(savedInstanceState);
 
         loadContent();
 
-        DataProvider.get().getMovies(shouldUpdate, lastPage, movies -> {
+        loadingDialog.show();
+
+        dataProvider.getMovies(shouldUpdate, lastPage, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
 
             adapter.notifyDataSetChanged();
             shouldUpdate = false;
+
+            loadingDialog.dismiss();
         });
     }
 
@@ -72,6 +85,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadContent() {
+        loadingDialog = new ProgressDialog(this);
+        loadingDialog.setTitle(R.string.loading);
+        loadingDialog.setMessage(getString(R.string.loadingMessage));
+
         adapter.setEmptyView(findViewById(R.id.emptyView));
         adapter.setMovieCallback(new MovieCellCallback() {
             @Override
@@ -100,7 +117,28 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        list.setLayoutManager(new GridLayoutManager(this, 2));
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            swipeRefreshLayout.setRefreshing(false);
+
+            if (!dataProvider.hasInternet()) {
+                Toast.makeText(this,R.string.noInternet,Toast.LENGTH_LONG).show();
+
+                return;
+            }
+
+            loadingDialog.show();
+
+            dataProvider.getMovies(true, lastPage, movies -> {
+                dataSource.clear();
+                dataSource.addAll(movies);
+
+                adapter.notifyDataSetChanged();
+                shouldUpdate = false;
+
+                loadingDialog.dismiss();
+            });
+        });
+
         list.setAdapter(adapter);
 
         switch (getResources().getConfiguration().orientation) {

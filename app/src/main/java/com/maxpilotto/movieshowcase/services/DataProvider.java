@@ -42,13 +42,13 @@ public final class DataProvider {
         return instance;
     }
 
-    public static Boolean hasInternet() {
+    private DataProvider() {
+    }
+
+    public Boolean hasInternet() {
         NetworkInfo activeNetwork = instance.connectivityManager.getActiveNetworkInfo();
 
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
-
-    private DataProvider() {
     }
 
     public void getMovies(Boolean requestNewData, Integer page, MovieUpdateCallback callback) {
@@ -103,7 +103,7 @@ public final class DataProvider {
                     database.insertOrUpdate(remoteGenres, "genres");
                 }
 
-                movies = database.getLocalMovies();
+                movies = database.getLocalMovies(); //TODO Add LIMIT
 
                 Log.d(App.TAG, "Loaded records: " + movies.size());
             }
