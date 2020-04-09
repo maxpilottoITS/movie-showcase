@@ -2,8 +2,6 @@ package com.maxpilotto.movieshowcase.util;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -32,12 +30,6 @@ public final class Util {
 
     public static String coverOf(String path) {
         return "https://image.tmdb.org/t/p/original/" + path;
-    }
-
-    public static Boolean isConnected(ConnectivityManager cm) {
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     public static AsyncTask asyncTask(Boolean autoStart, AsyncTaskSimpleCallback callback) {

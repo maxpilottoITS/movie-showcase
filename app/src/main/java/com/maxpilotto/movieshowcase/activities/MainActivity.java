@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -21,8 +20,6 @@ import com.maxpilotto.movieshowcase.services.DataProvider;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.maxpilotto.movieshowcase.util.Util.scrollPositionOf;
 
 public class MainActivity extends AppCompatActivity {
     public static final String ID_EXTRA = "movie.id.extra";

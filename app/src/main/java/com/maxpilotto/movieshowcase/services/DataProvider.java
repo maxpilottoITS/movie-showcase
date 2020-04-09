@@ -1,8 +1,8 @@
 package com.maxpilotto.movieshowcase.services;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -15,7 +15,6 @@ import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieUpdateCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
-import com.maxpilotto.movieshowcase.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,89 +42,77 @@ public final class DataProvider {
         return instance;
     }
 
+    public static Boolean hasInternet() {
+        NetworkInfo activeNetwork = instance.connectivityManager.getActiveNetworkInfo();
+
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
     private DataProvider() {
     }
 
     public void getMovies(MovieUpdateCallback callback) {
+        getMovies(1, callback);
+    }
+
+    public void getMovies(Integer page, MovieUpdateCallback callback) {
         final Database database = Database.get();
 
-        // Task that fetches the data from the service and then saves
-        // the data inside the local db
-        AsyncTask remote = asyncTask(new AsyncTaskSimpleCallback() {
-            List<Movie> movies;
-
-            @Override
-            public void run(AsyncTask task) {
-                List<Genre> remoteGenres = JsonService
-                        .fetchObject(Routes.genres())
-                        .getObjectList("genres", jsonObject -> {
-                            return new Genre(
-                                    jsonObject.getInt("id"),
-                                    jsonObject.getString("name")
-                            );
-                        });
-                List<Movie> remoteMovies = JsonService
-                        .fetchObject(Routes.discover(1))
-                        .getObjectList("results", jsonObject -> {
-                            List<Integer> genreIds = jsonObject.getIntList("genre_ids");
-                            List<Genre> genreList = new ArrayList<>();
-                            Integer movieId = jsonObject.getInt("id");
-
-                            for (Genre g : remoteGenres) {
-                                if (genreIds.contains(g.getId())) {
-                                    genreList.add(g);
-                                }
-                            }
-
-                            database.insertMovieGenres(genreList, movieId);
-
-                            return new Movie(
-                                    movieId,
-                                    jsonObject.getString("title"),
-                                    jsonObject.getString("overview"),
-                                    jsonObject.getCalendar("release_date", "yyyy-MM-dd", Locale.getDefault()),
-                                    posterOf(jsonObject.getString("poster_path")),
-                                    coverOf(jsonObject.getString("backdrop_path")),
-                                    genreList,
-                                    jsonObject.getInt("vote_average")
-                            );
-                        });
-
-                database.insertOrUpdate(remoteMovies, "movies");
-                database.insertOrUpdate(remoteGenres, "genres");
-
-                movies = database.getLocalMovies();
-            }
-
-            @Override
-            public void onComplete() {
-                callback.onLoad(movies);
-            }
-        });
-
-        // Task that loads the data from the local db
-        // This data is not available on the first run
         asyncTask(true, new AsyncTaskSimpleCallback() {
-            List<Movie> movies;
+            List<Movie> movies = new ArrayList<>();
 
             @Override
             public void run(AsyncTask task) {
+                if (!hasInternet()) {
+                    Log.d(App.TAG, "Not connected, won't look for updates");
+                } else {
+                    List<Genre> remoteGenres = JsonService
+                            .fetchObject(Routes.genres())
+                            .getObjectList("genres", jsonObject -> {
+                                return new Genre(
+                                        jsonObject.getInt("id"),
+                                        jsonObject.getString("name")
+                                );
+                            });
+                    List<Movie> remoteMovies = JsonService
+                            .fetchObject(Routes.discover(page))
+                            .getObjectList("results", jsonObject -> {
+                                List<Integer> genreIds = jsonObject.getIntList("genre_ids");
+                                List<Genre> genreList = new ArrayList<>();
+                                Integer movieId = jsonObject.getInt("id");
+
+                                for (Genre g : remoteGenres) {
+                                    if (genreIds.contains(g.getId())) {
+                                        genreList.add(g);
+                                    }
+                                }
+
+                                database.insertMovieGenres(genreList, movieId);
+
+                                return new Movie(
+                                        movieId,
+                                        jsonObject.getString("title"),
+                                        jsonObject.getString("overview"),
+                                        jsonObject.getCalendar("release_date", "yyyy-MM-dd", Locale.getDefault()),
+                                        posterOf(jsonObject.getString("poster_path")),
+                                        coverOf(jsonObject.getString("backdrop_path")),
+                                        genreList,
+                                        jsonObject.getInt("vote_average")
+                                );
+                            });
+
+                    database.insertOrUpdate(remoteMovies, "movies");
+                    database.insertOrUpdate(remoteGenres, "genres");
+                }
+
                 movies = database.getLocalMovies();
+
+                Log.d(App.TAG, "Loaded records: " + movies.size());
             }
 
             @Override
             public void onComplete() {
                 callback.onLoad(movies);
-
-                if (Util.isConnected(connectivityManager)) {
-                    if (movies.isEmpty()) {
-                        remote.execute();
-                    }
-
-                    Log.d(App.TAG, "Connected, will look for updates");
-                } else {
-                    Log.d(App.TAG, "Not connected, won't look for updates");
-                }
             }
         });
     }

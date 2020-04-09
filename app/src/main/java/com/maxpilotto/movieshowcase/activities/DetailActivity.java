@@ -2,7 +2,6 @@ package com.maxpilotto.movieshowcase.activities;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,13 +11,9 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.persistance.Database;
-import com.maxpilotto.movieshowcase.services.DataProvider;
-
-import java.util.Calendar;
 
 public class DetailActivity extends AppCompatActivity {
     private TextView title;
@@ -75,7 +70,6 @@ public class DetailActivity extends AppCompatActivity {
         userRating.setText(getString(R.string.userRating, movie.getVoteAverage()));
         personalRating.setText(getString(R.string.yourRating, movie.getRating()));
         year.setText(getString(R.string.year, movie.getYear()));
-
 
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             glide.load(movie.getCoverPath())
