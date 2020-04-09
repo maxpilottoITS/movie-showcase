@@ -33,12 +33,32 @@
 
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-    <TextView
+    <LinearLayout
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
         android:gravity="center"
-        android:text="@string/emptyMovieList"
-        android:visibility="invisible"/>
+        android:visibility="invisible">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:textSize="26sp"
+            android:text="@string/emptyMovieList"/>
+
+        <Button
+            android:id="@+id/refreshNoMovies"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/refresh"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_marginTop="30dp"/>
+
+    </LinearLayout>
+
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

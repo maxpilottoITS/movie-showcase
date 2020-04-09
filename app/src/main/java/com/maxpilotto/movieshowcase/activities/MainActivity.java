@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView list;
     private MovieAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Button refreshNoMovies;
     private List<Movie> dataSource;
     private DataProvider dataProvider;
     private Boolean shouldUpdate = true;
@@ -55,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         list = findViewById(R.id.listView);
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
+        refreshNoMovies = findViewById(R.id.refreshNoMovies);
 
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
@@ -82,6 +85,26 @@ public class MainActivity extends AppCompatActivity {
             shouldUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA);
             lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA);
         }
+    }
+
+    private void refreshDataSource(){
+        if (!dataProvider.hasInternet()) {
+            Toast.makeText(this,R.string.noInternet,Toast.LENGTH_LONG).show();
+
+            return;
+        }
+
+        loadingDialog.show();
+
+        dataProvider.getMovies(true, lastPage, movies -> {
+            dataSource.clear();
+            dataSource.addAll(movies);
+
+            adapter.notifyDataSetChanged();
+            shouldUpdate = false;
+
+            loadingDialog.dismiss();
+        });
     }
 
     private void loadContent() {
@@ -117,26 +140,14 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        refreshNoMovies.setOnClickListener(v -> {
+            refreshDataSource();
+        });
+
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(false);
 
-            if (!dataProvider.hasInternet()) {
-                Toast.makeText(this,R.string.noInternet,Toast.LENGTH_LONG).show();
-
-                return;
-            }
-
-            loadingDialog.show();
-
-            dataProvider.getMovies(true, lastPage, movies -> {
-                dataSource.clear();
-                dataSource.addAll(movies);
-
-                adapter.notifyDataSetChanged();
-                shouldUpdate = false;
-
-                loadingDialog.dismiss();
-            });
+            refreshDataSource();
         });
 
         list.setAdapter(adapter);
