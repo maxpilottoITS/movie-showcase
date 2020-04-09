@@ -16,11 +16,10 @@ Mostra una lista di film ed ha le seguenti funzionalità di base
     + Rating, al click viene mostrato un alert dove si può dare un rating a stelle
     + Preferito, al click viene cambiato lo stato di preferito sull'item
 + Mostra schermata senza dati
-+ Rotazione
++ Rotazione supportata
 
 Funzionalità extra
 
-+ Le celle della lista possono essere visualizzate utilizzando diversi stili (griglia e lista)
 + La toolbar di questa schermata ha le seguenti opzioni
     + Mostra/Nascondi preferiti
     + Mostra/Nascondi film nascosti
@@ -33,7 +32,7 @@ Funzionalità extra
 
 La lista viene gestita con una RecyclerView, per questioni di performance e funzionalità, la lista inoltre avrà la funzionalità di swipe-to-refresh, la quale terrà conto dell'item a cui si è arrivati
 
-Lo scrolling sarà "infinito", raggiunta la fine o un punto vicino alla fine, verrà scaricata la prossima pagina di film
+Lo scrolling sarà "infinito", raggiunta la fine o un punto vicino alla fine, verrà scaricata la prossima pagina di film e/o caricato da locale il gruppo di "nuovi" film
 
 #### Image loading and caching
 
@@ -43,11 +42,22 @@ Per caricare le immagini nelle varie cella si decide di usare [Glide](https://gi
 
 I dati verranno scaricati e convertiti usando la libreria [Kon](https://github.com/maxpilotto/kon), perchè sviluppata internamente
 
+La libreria si occupa anche della parte di networking
+
 #### Persistence
 
 I dati, non appena scaricati, saranno memorizzati nel db interno all' app, usando SQLite, senza nessun framework
 
 Se un dato è già presente nel db, i dati di questo verranno sovrascritti con quelli più aggiornati, ad eccezzione dei valori che non arrivano dalla rete, come lo stato di preferito o il rating (quello locale, non quello della piattaforma)
+
+#### Workflow dati
+
+All'avvio dell'app
+
++ I dati verranno scaricati dal servizio
+    + Se il servizio o internet non sono disponibili, questo step viene saltato
++ I dati vengono caricati dal database, precedentemente scaricati e caricati nel db
+    + Se il db è vuoto, viene mostrato un errore all'utente
 
 ## Schermata dettaglio
 
@@ -58,6 +68,8 @@ Funzionalità extra
 
 ## Impostazioni
     
+La schermata di impostazioni è opzionale e mostrerà le seguenti opzioni
+ 
 + Data
     + Lingua film, si può cambiare la lingua e metterla diversa dal Locale corrente
     + Mostra film nascosti, mostra activity dove si possono togliere dalla lista dei nascosti
