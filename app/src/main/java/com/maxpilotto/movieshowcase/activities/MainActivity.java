@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -23,10 +24,21 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     public static final String ID_EXTRA = "movie.id.extra";
+    public static final String DO_UPDATE_EXTRA = "service.do_update.extra";
+    public static final String LAST_PAGE_EXTRA = "service.last_page.extra";
 
     private RecyclerView list;
     private MovieAdapter adapter;
     private List<Movie> dataSource;
+    private Boolean shouldUpdate = true;
+    private Integer lastPage = 1;
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putBoolean(DO_UPDATE_EXTRA, shouldUpdate);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,14 +51,24 @@ public class MainActivity extends AppCompatActivity {
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
 
+        restoreData(savedInstanceState);
+
         loadContent();
 
-        DataProvider.get().getMovies(movies -> {
+        DataProvider.get().getMovies(shouldUpdate, lastPage, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
 
             adapter.notifyDataSetChanged();
+            shouldUpdate = false;
         });
+    }
+
+    private void restoreData(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            shouldUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA);
+            lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA);
+        }
     }
 
     private void loadContent() {

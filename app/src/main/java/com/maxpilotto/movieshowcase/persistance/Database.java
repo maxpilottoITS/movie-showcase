@@ -61,8 +61,6 @@ public class Database {
 
     public void update(ContentValues values, String table) {
         int result = database.update(table,values,"id=?",new String[]{values.getAsString("id")});
-
-        Log.d(App.TAG, "Updated: " + result);
     }
 
     public void insertMovies(List<Movie> movies) {

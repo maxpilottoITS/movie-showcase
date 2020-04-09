@@ -51,11 +51,7 @@ public final class DataProvider {
     private DataProvider() {
     }
 
-    public void getMovies(MovieUpdateCallback callback) {
-        getMovies(1, callback);
-    }
-
-    public void getMovies(Integer page, MovieUpdateCallback callback) {
+    public void getMovies(Boolean requestNewData, Integer page, MovieUpdateCallback callback) {
         final Database database = Database.get();
 
         asyncTask(true, new AsyncTaskSimpleCallback() {
@@ -63,7 +59,9 @@ public final class DataProvider {
 
             @Override
             public void run(AsyncTask task) {
-                if (!hasInternet()) {
+                if (!requestNewData) {
+                    Log.d(App.TAG, "No new data was requested, won't look for updates");
+                } else if (!hasInternet()) {
                     Log.d(App.TAG, "Not connected, won't look for updates");
                 } else {
                     List<Genre> remoteGenres = JsonService
