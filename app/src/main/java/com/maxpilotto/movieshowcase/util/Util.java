@@ -86,4 +86,8 @@ public final class Util {
 
         return -1;
     }
+
+    public static Integer percentageOf(Integer input, Integer discount) {
+        return input - (input * discount) / 100;
+    }
 }

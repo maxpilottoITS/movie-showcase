@@ -46,7 +46,7 @@ public class Database {
 
     public void insertOrUpdate(ContentValues values, String table) {
         if (insert(values, table) == -1) {
-            update(values,table);
+            update(values, table);
         }
     }
 
@@ -60,7 +60,7 @@ public class Database {
     }
 
     public void update(ContentValues values, String table) {
-        int result = database.update(table,values,"id=?",new String[]{values.getAsString("id")});
+        int result = database.update(table, values, "id=?", new String[]{values.getAsString("id")});
     }
 
     public void insertMovies(List<Movie> movies) {
@@ -89,7 +89,7 @@ public class Database {
     public Movie getLocalMovie(Integer id) {
         Cursor cursor = rawQuery(database, "SELECT * FROM movies WHERE id=?", id);
 
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             Movie m = new Movie(cursor);
 
             cursor.close();
@@ -100,9 +100,11 @@ public class Database {
         return null;
     }
 
-    public List<Movie> getLocalMovies() {
+    public List<Movie> getLocalMovies(Integer count) {
         List<Movie> movies = new ArrayList<>();
-        Cursor cursor = rawQuery(database, "SELECT * FROM movies DESC");
+        Cursor cursor = rawQuery(database, "SELECT * FROM movies ORDER BY releaseDate LIMIT 0,?", count);
+
+        Log.d(App.TAG, "Limit 0 to " + count);
 
         while (cursor.moveToNext()) {
             movies.add(new Movie(cursor));

@@ -6,6 +6,7 @@ import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.maxpilotto.kon.JsonObject;
 import com.maxpilotto.kon.net.JsonService;
 import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
@@ -30,6 +31,8 @@ import static com.maxpilotto.movieshowcase.util.Util.posterOf;
 public final class DataProvider {
     private static DataProvider instance;
     private ConnectivityManager connectivityManager;
+    private Integer totalResults = 0;
+    private Integer totalPages = 0;
 
     public static void init(Context context) {
         instance = new DataProvider();
@@ -64,6 +67,7 @@ public final class DataProvider {
                 } else if (!hasInternet()) {
                     Log.d(App.TAG, "Not connected, won't look for updates");
                 } else {
+                    JsonObject movieJson = JsonService.fetchObject(Routes.discover(page));
                     List<Genre> remoteGenres = JsonService
                             .fetchObject(Routes.genres())
                             .getObjectList("genres", jsonObject -> {
@@ -72,38 +76,41 @@ public final class DataProvider {
                                         jsonObject.getString("name")
                                 );
                             });
-                    List<Movie> remoteMovies = JsonService
-                            .fetchObject(Routes.discover(page))
-                            .getObjectList("results", jsonObject -> {
-                                List<Integer> genreIds = jsonObject.getIntList("genre_ids");
-                                List<Genre> genreList = new ArrayList<>();
-                                Integer movieId = jsonObject.getInt("id");
+                    List<Movie> remoteMovies = movieJson.getObjectList("results", jsonObject -> {
+                        List<Integer> genreIds = jsonObject.getIntList("genre_ids");
+                        List<Genre> genreList = new ArrayList<>();
+                        Integer movieId = jsonObject.getInt("id");
 
-                                for (Genre g : remoteGenres) {
-                                    if (genreIds.contains(g.getId())) {
-                                        genreList.add(g);
-                                    }
-                                }
+                        for (Genre g : remoteGenres) {
+                            if (genreIds.contains(g.getId())) {
+                                genreList.add(g);
+                            }
+                        }
 
-                                database.insertMovieGenres(genreList, movieId);
+                        database.insertMovieGenres(genreList, movieId);
 
-                                return new Movie(
-                                        movieId,
-                                        jsonObject.getString("title"),
-                                        jsonObject.getString("overview"),
-                                        jsonObject.getCalendar("release_date", "yyyy-MM-dd", Locale.getDefault()),
-                                        posterOf(jsonObject.getString("poster_path")),
-                                        coverOf(jsonObject.getString("backdrop_path")),
-                                        genreList,
-                                        jsonObject.getInt("vote_average")
-                                );
-                            });
+                        return new Movie(
+                                movieId,
+                                jsonObject.getString("title"),
+                                jsonObject.getString("overview"),
+                                jsonObject.getCalendar("release_date", "yyyy-MM-dd", Locale.getDefault()),
+                                posterOf(jsonObject.getString("poster_path")),
+                                coverOf(jsonObject.getString("backdrop_path")),
+                                genreList,
+                                jsonObject.getInt("vote_average")
+                        );
+                    });
+
+                    System.out.println(movieJson);
+
+                    totalPages = movieJson.getInt("total_pages");
+                    totalResults = movieJson.getInt("total_results");
 
                     database.insertOrUpdate(remoteMovies, "movies");
                     database.insertOrUpdate(remoteGenres, "genres");
                 }
 
-                movies = database.getLocalMovies(); //TODO Add LIMIT
+                movies = database.getLocalMovies(page * getResultsPerPage());
 
                 Log.d(App.TAG, "Loaded records: " + movies.size());
             }
@@ -113,5 +120,17 @@ public final class DataProvider {
                 callback.onLoad(movies);
             }
         });
+    }
+
+    public Integer getResultsPerPage() {
+        return totalResults != 0 && totalPages != 0 ? totalResults / totalPages : 20;
+    }
+
+    public Integer getTotalResults() {
+        return totalResults;
+    }
+
+    public Integer getTotalPages() {
+        return totalPages;
     }
 }
