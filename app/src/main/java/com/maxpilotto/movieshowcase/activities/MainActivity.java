@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
@@ -28,8 +26,7 @@ import com.maxpilotto.movieshowcase.services.DataProvider;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.maxpilotto.movieshowcase.util.Util.percentageOf;
-import static com.maxpilotto.movieshowcase.util.Util.scrollPositionOf;
+import static com.maxpilotto.movieshowcase.util.Util.isNearTheEnd;
 
 public class MainActivity extends AppCompatActivity {
     public static final String ID_EXTRA = "movie.id.extra";
@@ -73,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadingDialog.show();
 
-        dataProvider.getMovies(shouldUpdate, lastPage, movies -> {
+        dataProvider.getMovies(shouldUpdate, 1, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
 
@@ -100,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadingDialog.show();
 
-        dataProvider.getMovies(true, lastPage, movies -> {
+        dataProvider.getMovies(true, 1, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
 
@@ -159,28 +156,25 @@ public class MainActivity extends AppCompatActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                Integer pos = scrollPositionOf(recyclerView);
-                Integer reloadPos =  dataSource.size() / 2;
+//                Integer pos = scrollPositionOf(recyclerView);
+//                Integer reloadPos =  dataSource.size() / 2;
 
-                if (pos >= reloadPos) {
+                if (isNearTheEnd(recyclerView)) {
                     if (dataProvider.hasInternet()) {
                         lastPage++;
 
                         dataProvider.getMovies(true, lastPage, movies -> {
-                            dataSource.clear();
                             dataSource.addAll(movies);
 
                             adapter.notifyDataSetChanged();
-
-                            recyclerView.scrollToPosition(pos);
                         });
                     }
-
-                    //TODO Request new page
-                    // The getLocalMovie should return all the movies till (last page * 20)
-                    // The service should only return the 20 new movies
-                    // All of these numbers should be taken from the service
                 }
+
+                //TODO Request new page
+                // The getLocalMovie should return all the movies till (last page * 20)
+                // The service should only return the 20 new movies
+                // All of these numbers should be taken from the service
             }
         });
         list.setAdapter(adapter);

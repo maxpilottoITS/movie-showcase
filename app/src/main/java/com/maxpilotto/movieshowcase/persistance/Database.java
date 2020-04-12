@@ -86,6 +86,9 @@ public class Database {
         }
     }
 
+    /**
+     * Returns a local movie for the given [id]
+     */
     public Movie getLocalMovie(Integer id) {
         Cursor cursor = rawQuery(database, "SELECT * FROM movies WHERE id=?", id);
 
@@ -100,11 +103,15 @@ public class Database {
         return null;
     }
 
-    public List<Movie> getLocalMovies(Integer count) {
+    /**
+     * Returns the local movies
+     *
+     * @param count Number of movies required
+     * @param offset Offset for the query
+     */
+    public List<Movie> getLocalMovies(Integer offset, Integer count) {
         List<Movie> movies = new ArrayList<>();
-        Cursor cursor = rawQuery(database, "SELECT * FROM movies ORDER BY releaseDate LIMIT 0,?", count);
-
-        Log.d(App.TAG, "Limit 0 to " + count);
+        Cursor cursor = rawQuery(database, "SELECT * FROM movies ORDER BY releaseDate LIMIT ?,?", offset, count);
 
         while (cursor.moveToNext()) {
             movies.add(new Movie(cursor));

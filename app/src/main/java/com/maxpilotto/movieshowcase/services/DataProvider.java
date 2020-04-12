@@ -101,16 +101,18 @@ public final class DataProvider {
                         );
                     });
 
-                    System.out.println(movieJson);
-
                     totalPages = movieJson.getInt("total_pages");
                     totalResults = movieJson.getInt("total_results");
+
+                    for (Movie m : remoteMovies) {
+                        Log.d(App.TAG, "Poster: " + m.getPosterPath());
+                    }
 
                     database.insertOrUpdate(remoteMovies, "movies");
                     database.insertOrUpdate(remoteGenres, "genres");
                 }
 
-                movies = database.getLocalMovies(page * getResultsPerPage());
+                movies = database.getLocalMovies(page * getResultsPerPage(),getResultsPerPage());
 
                 Log.d(App.TAG, "Loaded records: " + movies.size());
             }
