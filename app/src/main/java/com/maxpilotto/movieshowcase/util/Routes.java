@@ -6,8 +6,7 @@ public final class Routes {
 
     public static String discover(Integer page) {
         return "https://api.themoviedb.org/3/discover/movie?api_key=" + API_KEY +
-                "&page=" + page +
-                "&sort_by=release_date.desc";
+                "&page=" + page;
     }
 
     public static String genres() {

@@ -25,11 +25,11 @@ public final class Util {
     }
 
     public static String posterOf(String path) {
-        return "https://image.tmdb.org/t/p/w500/" + path;
+        return !path.equals("null") ? "https://image.tmdb.org/t/p/w500/" + path : path;
     }
 
     public static String coverOf(String path) {
-        return "https://image.tmdb.org/t/p/original/" + path;
+        return !path.equals("null") ? "https://image.tmdb.org/t/p/original/" + path : path;
     }
 
     public static AsyncTask asyncTask(Boolean autoStart, AsyncTaskSimpleCallback callback) {
@@ -85,6 +85,16 @@ public final class Util {
         }
 
         return -1;
+    }
+
+    public static Boolean isNearTheEnd(RecyclerView recyclerView) {
+        RecyclerView.LayoutManager lm = recyclerView.getLayoutManager();
+        Integer visibleItems = lm.getChildCount();
+        Integer total = lm.getItemCount();
+        Integer first = scrollPositionOf(recyclerView);
+        Integer offset = 1;
+
+        return (first + visibleItems >= (total - offset));
     }
 
     public static Integer percentageOf(Integer input, Integer discount) {

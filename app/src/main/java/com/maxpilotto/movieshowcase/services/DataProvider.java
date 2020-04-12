@@ -91,13 +91,13 @@ public final class DataProvider {
 
                         return new Movie(
                                 movieId,
-                                jsonObject.getString("title"),
-                                jsonObject.getString("overview"),
-                                jsonObject.getCalendar("release_date", "yyyy-MM-dd", Locale.getDefault()),
-                                posterOf(jsonObject.getString("poster_path")),
-                                coverOf(jsonObject.getString("backdrop_path")),
+                                jsonObject.optString("title",""),
+                                jsonObject.optString("overview",""),
+                                jsonObject.optCalendar("release_date", "yyyy-MM-dd", Locale.getDefault(), 0),
+                                posterOf(jsonObject.optString("poster_path","")),
+                                coverOf(jsonObject.optString("backdrop_path","")),
                                 genreList,
-                                jsonObject.getInt("vote_average")
+                                jsonObject.optInt("vote_average",0)
                         );
                     });
 

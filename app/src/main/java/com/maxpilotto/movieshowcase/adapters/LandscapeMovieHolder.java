@@ -28,9 +28,11 @@ public class LandscapeMovieHolder extends MovieHolder {
 
     @Override
     public void bind(Movie movie, MovieCellCallback callback) {
-        Glide.with(context)
-                .load(movie.getPosterPath())
-                .into(poster);
+        if (!movie.getPosterPath().equals("null")) {
+            Glide.with(context)
+                    .load(movie.getPosterPath())
+                    .into(poster);
+        }
 
         root.setOnClickListener(v -> {
             callback.onClick(movie);
