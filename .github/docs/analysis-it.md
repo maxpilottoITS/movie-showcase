@@ -25,8 +25,8 @@ Funzionalità extra
     + Mostra/Nascondi film nascosti
     + Refresh
     + Impostazioni
-+ Pull to refresh
-+ Infinite scroll
++ Pull to refresh Refresh dei film facendo uno swipe dall'alto verso il basso
++ Infinite scroll Scroll almost-endless, che carica una nuova pagina ogni volta che si raggiunge la fine della lista
 
 #### Gestione lista 
 
