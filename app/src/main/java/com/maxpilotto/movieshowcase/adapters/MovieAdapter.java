@@ -56,6 +56,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
         return source.size();
     }
 
+    public Boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
     public void setEmptyView(View view) {
         this.emptyView = view;
     }

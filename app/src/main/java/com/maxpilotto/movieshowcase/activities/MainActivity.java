@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
@@ -22,6 +24,7 @@ import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.services.DataProvider;
+import com.maxpilotto.movieshowcase.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private Button refreshNoMovies;
     private List<Movie> dataSource;
     private DataProvider dataProvider;
-    private Boolean shouldUpdate = true;
+    //    private Boolean shouldUpdate = true;
     private Integer lastPage = 1;
     private ProgressDialog loadingDialog;
 
@@ -47,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        outState.putBoolean(DO_UPDATE_EXTRA, shouldUpdate);
+//        outState.putBoolean(DO_UPDATE_EXTRA, shouldUpdate);
     }
 
     @Override
@@ -70,12 +73,12 @@ public class MainActivity extends AppCompatActivity {
 
         loadingDialog.show();
 
-        dataProvider.getMovies(shouldUpdate, 1, movies -> {
-            dataSource.clear();
+        dataProvider.getMovies(true, 1, movies -> {
+//            dataSource.clear();
             dataSource.addAll(movies);
 
             adapter.notifyDataSetChanged();
-            shouldUpdate = false;
+//            shouldUpdate = false;
 
             loadingDialog.dismiss();
         });
@@ -83,8 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void restoreData(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            shouldUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA);
-            lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA);
+//            shouldUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA);
+//            lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA);
         }
     }
 
@@ -102,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
             dataSource.addAll(movies);
 
             adapter.notifyDataSetChanged();
-            shouldUpdate = false;
+//            shouldUpdate = false;
 
             loadingDialog.dismiss();
         });
@@ -151,24 +154,24 @@ public class MainActivity extends AppCompatActivity {
             refreshDataSource();
         });
 
+        list.setAdapter(adapter);
         list.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-//                Integer pos = scrollPositionOf(recyclerView);
-//                Integer reloadPos =  dataSource.size() / 2;
+                if (!recyclerView.canScrollVertically(1) && dy > 0) {
+                    lastPage++;
+                    loadingDialog.show();
 
-                if (isNearTheEnd(recyclerView)) {
-                    if (dataProvider.hasInternet()) {
-                        lastPage++;
+                    dataProvider.getMovies(true, lastPage, movies -> {
+                        dataSource.addAll(movies);
 
-                        dataProvider.getMovies(true, lastPage, movies -> {
-                            dataSource.addAll(movies);
+                        adapter.notifyDataSetChanged();
 
-                            adapter.notifyDataSetChanged();
-                        });
-                    }
+                        loadingDialog.dismiss();
+                    });
+                    Log.d(App.TAG, "Reached the end");
                 }
 
                 //TODO Request new page
@@ -177,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
                 // All of these numbers should be taken from the service
             }
         });
-        list.setAdapter(adapter);
 
         switch (getResources().getConfiguration().orientation) {
             case Configuration.ORIENTATION_PORTRAIT:

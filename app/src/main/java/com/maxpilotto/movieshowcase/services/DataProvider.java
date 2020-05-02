@@ -112,7 +112,7 @@ public final class DataProvider {
                     database.insertOrUpdate(remoteGenres, "genres");
                 }
 
-                movies = database.getLocalMovies(page * getResultsPerPage(),getResultsPerPage());
+                movies = database.getLocalMovies((page - 1) * getResultsPerPage(),getResultsPerPage());
 
                 Log.d(App.TAG, "Loaded records: " + movies.size());
             }
