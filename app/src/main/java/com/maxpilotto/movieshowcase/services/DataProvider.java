@@ -1,5 +1,6 @@
 package com.maxpilotto.movieshowcase.services;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -13,6 +14,9 @@ import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.persistance.Database;
+import com.maxpilotto.movieshowcase.persistance.MovieProvider;
+import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieUpdateCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
@@ -54,7 +58,7 @@ public final class DataProvider {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public void getMovies(Boolean requestNewData, Integer page, MovieUpdateCallback callback) {
+    public void getMovies(ContentResolver contentResolver, Boolean requestNewData, Integer page, MovieUpdateCallback callback) {
         final Database database = Database.get();
 
         asyncTask(true, new AsyncTaskSimpleCallback() {
@@ -105,12 +109,15 @@ public final class DataProvider {
                     totalResults = movieJson.getInt("total_results");
 
                     for (Movie m : remoteMovies) {
-                        Log.d(App.TAG, "Poster: " + m.getPosterPath());
+                        contentResolver.insert(MovieProvider.URI_MOVIES,m.values());
                     }
 
-                    database.insertOrUpdate(remoteMovies, "movies");
-                    database.insertOrUpdate(remoteGenres, "genres");
+                    for (Genre g : remoteGenres) {
+                        contentResolver.insert(MovieProvider.URI_GENRES,g.values());
+                    }
                 }
+
+                movies = Movie.parseList();
 
                 movies = database.getLocalMovies((page - 1) * getResultsPerPage(),getResultsPerPage());
 

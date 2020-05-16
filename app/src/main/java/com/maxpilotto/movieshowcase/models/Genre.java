@@ -3,7 +3,11 @@ package com.maxpilotto.movieshowcase.models;
 import android.content.ContentValues;
 import android.database.Cursor;
 
+import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
 import com.maxpilotto.movieshowcase.protocols.Storable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Genre related to a [Movie]
@@ -16,9 +20,19 @@ public class Genre implements Storable {
     private Integer id;
     private String name;
 
+    public static List<Genre> parseList(Cursor cursor) {
+        List<Genre> genres = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            genres.add(new Genre(cursor));
+        }
+
+        return genres;
+    }
+
     public Genre(Cursor cursor) {
-        this.id = cursor.getInt(cursor.getColumnIndex("id"));
-        this.name = cursor.getString(cursor.getColumnIndex("name"));
+        this.id = cursor.getInt(cursor.getColumnIndex(GenreTable.ID));
+        this.name = cursor.getString(cursor.getColumnIndex(GenreTable.COLUMN_NAME));
     }
 
     public Genre(Integer id, String name) {
@@ -30,8 +44,8 @@ public class Genre implements Storable {
     public ContentValues values() {
         ContentValues values = new ContentValues();
 
-        values.put("id",id);
-        values.put("name",name);
+        values.put(GenreTable.ID,id);
+        values.put(GenreTable.COLUMN_NAME,name);
 
         return values;
     }

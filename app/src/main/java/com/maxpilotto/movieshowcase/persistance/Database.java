@@ -9,6 +9,9 @@ import android.util.Log;
 import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
+import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieWithGenresTable;
 import com.maxpilotto.movieshowcase.protocols.Storable;
 
 import java.util.ArrayList;
@@ -60,18 +63,18 @@ public class Database {
     }
 
     public void update(ContentValues values, String table) {
-        int result = database.update(table, values, "id=?", new String[]{values.getAsString("id")});
+        int result = database.update(table, values, GenreTable.ID + "=?", new String[]{values.getAsString(GenreTable.ID)});
     }
 
     public void insertMovies(List<Movie> movies) {
         for (Movie m : movies) {
-            insert(m.values(), "movies");
+            insert(m.values(), MovieTable.NAME);
         }
     }
 
     public void insertGenres(List<Genre> genres) {
         for (Genre g : genres) {
-            insert(g.values(), "genres");
+            insert(g.values(), GenreTable.COLUMN_NAME);
         }
     }
 
@@ -79,10 +82,11 @@ public class Database {
         for (Genre g : genres) {
             ContentValues values = new ContentValues();
 
-            values.put("movie", movieId);
-            values.put("genre", g.getId());
+            values.put(MovieWithGenresTable.ID,movieId + g.getId());
+            values.put(MovieWithGenresTable.COLUMN_MOVIE, movieId);
+            values.put(MovieWithGenresTable.COLUMN_GENRE, g.getId());
 
-            insert(values, "movie_genres");
+            insert(values, MovieWithGenresTable.NAME);
         }
     }
 
@@ -90,7 +94,7 @@ public class Database {
      * Returns a local movie for the given [id]
      */
     public Movie getLocalMovie(Integer id) {
-        Cursor cursor = rawQuery(database, "SELECT * FROM movies WHERE id=?", id);
+        Cursor cursor = rawQuery(database, "SELECT * FROM movies WHERE _id=?", id);
 
         if (cursor.moveToFirst()) {
             Movie m = new Movie(cursor);
@@ -121,6 +125,7 @@ public class Database {
         return movies;
     }
 
+    @Deprecated()
     public List<Genre> getMovieGenres(Integer movie) {
         List<Genre> genres = new ArrayList<>();
         Cursor cursor = rawQuery(

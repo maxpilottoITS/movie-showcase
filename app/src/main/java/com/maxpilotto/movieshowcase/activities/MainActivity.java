@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private DataProvider dataProvider;
     //    private Boolean shouldUpdate = true;
     private Integer lastPage = 1;
-    private ProgressDialog loadingDialog;
+//    private ProgressDialog loadingDialog;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
 
         loadContent();
 
-        loadingDialog.show();
+//        loadingDialog.show();
 
         dataProvider.getMovies(true, 1, movies -> {
 //            dataSource.clear();
@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
 //            shouldUpdate = false;
 
-            loadingDialog.dismiss();
+//            loadingDialog.dismiss();
         });
     }
 
@@ -98,7 +98,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        loadingDialog.show();
+//        loadingDialog.show();
 
         dataProvider.getMovies(true, 1, movies -> {
             dataSource.clear();
@@ -107,14 +107,14 @@ public class MainActivity extends AppCompatActivity {
             adapter.notifyDataSetChanged();
 //            shouldUpdate = false;
 
-            loadingDialog.dismiss();
+//            loadingDialog.dismiss();
         });
     }
 
     private void loadContent() {
-        loadingDialog = new ProgressDialog(this);
-        loadingDialog.setTitle(R.string.loading);
-        loadingDialog.setMessage(getString(R.string.loadingMessage));
+//        loadingDialog = new ProgressDialog(this);
+//        loadingDialog.setTitle(R.string.loading);
+//        loadingDialog.setMessage(getString(R.string.loadingMessage));
 
         adapter.setEmptyView(findViewById(R.id.emptyView));
         adapter.setMovieCallback(new MovieCellCallback() {
@@ -162,14 +162,14 @@ public class MainActivity extends AppCompatActivity {
 
                 if (!recyclerView.canScrollVertically(1) && dy > 0) {
                     lastPage++;
-                    loadingDialog.show();
+//                    loadingDialog.show();
 
                     dataProvider.getMovies(true, lastPage, movies -> {
                         dataSource.addAll(movies);
 
                         adapter.notifyDataSetChanged();
 
-                        loadingDialog.dismiss();
+//                        loadingDialog.dismiss();
                     });
                     Log.d(App.TAG, "Reached the end");
                 }

@@ -1,7 +1,9 @@
 package com.maxpilotto.movieshowcase.activities;
 
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -11,9 +13,16 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
+import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
-import com.maxpilotto.movieshowcase.persistance.Database;
+import com.maxpilotto.movieshowcase.persistance.MovieProvider;
+import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieWithGenresTable;
+
+import java.util.List;
 
 public class DetailActivity extends AppCompatActivity {
     private TextView title;
@@ -63,7 +72,29 @@ public class DetailActivity extends AppCompatActivity {
     private void loadContent() {
         RequestManager glide = Glide.with(this);
         Integer id = getIntent().getIntExtra(MainActivity.ID_EXTRA, 0);
-        Movie movie = Database.get().getLocalMovie(id);     //TODO All db calls should be async
+        Cursor cursor = getContentResolver().query(
+                MovieProvider.URI_MOVIES,
+                null,
+                MovieTable.ID + "=" + id,
+                null,
+                null
+        );
+        cursor.moveToNext();
+
+        Movie movie = new Movie(cursor);
+
+        List<Genre> genres = Genre.parseList(getContentResolver().query(
+                MovieProvider.URI_GENRES_FOR_MOVIE,
+                new String[]{
+                        GenreTable.NAME + "." + GenreTable.ID,
+                        GenreTable.COLUMN_NAME
+                },
+                MovieWithGenresTable.COLUMN_MOVIE + "=" + id,
+                null,
+                null
+        ));
+
+        Log.d(App.TAG, "loadContent: " + genres.size());
 
         title.setText(movie.getTitle());
         overview.setText(movie.getOverview());
