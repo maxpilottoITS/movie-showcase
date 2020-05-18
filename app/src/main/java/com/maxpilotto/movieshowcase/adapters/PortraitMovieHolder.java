@@ -10,6 +10,8 @@ import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 
+import static com.maxpilotto.movieshowcase.util.Util.posterOf;
+
 public class PortraitMovieHolder extends MovieHolder {
     private ImageView poster;
     private ImageView favourite;
@@ -27,7 +29,7 @@ public class PortraitMovieHolder extends MovieHolder {
     public void bind(Movie movie, MovieCellCallback callback) {
         if (!movie.getPosterPath().equals("null")) {
             Glide.with(context)
-                    .load(movie.getPosterPath())
+                    .load(posterOf(movie.getPosterPath()))
                     .into(poster);
         }
 

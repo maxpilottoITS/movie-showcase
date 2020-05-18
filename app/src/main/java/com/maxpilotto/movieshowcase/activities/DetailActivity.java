@@ -23,6 +23,8 @@ import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieWithGenresTable;
 
 import java.util.List;
+import static com.maxpilotto.movieshowcase.util.Util.coverOf;
+import static com.maxpilotto.movieshowcase.util.Util.posterOf;
 
 public class DetailActivity extends AppCompatActivity {
     private TextView title;
@@ -103,10 +105,10 @@ public class DetailActivity extends AppCompatActivity {
         year.setText(getString(R.string.year, movie.getYear()));
 
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            glide.load(movie.getCoverPath())
+            glide.load(coverOf(movie.getCoverPath()))
                     .into((ImageView) findViewById(R.id.backdrop));
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            glide.load(movie.getPosterPath())
+            glide.load(posterOf(movie.getPosterPath()))
                     .into((ImageView) findViewById(R.id.poster));
         }
     }

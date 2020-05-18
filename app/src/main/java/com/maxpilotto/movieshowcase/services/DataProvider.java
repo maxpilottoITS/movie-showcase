@@ -9,14 +9,14 @@ import android.util.Log;
 
 import com.maxpilotto.kon.JsonObject;
 import com.maxpilotto.kon.net.JsonService;
+import com.maxpilotto.kon.processor.EncodableProcessor;
 import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
-import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
+import com.maxpilotto.movieshowcase.models.MovieDecoder;
+import com.maxpilotto.movieshowcase.models.MovieEncoder;
 import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.persistance.MovieProvider;
-import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
-import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieUpdateCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
@@ -35,8 +35,6 @@ import static com.maxpilotto.movieshowcase.util.Util.posterOf;
 public final class DataProvider {
     private static DataProvider instance;
     private ConnectivityManager connectivityManager;
-    private Integer totalResults = 0;
-    private Integer totalPages = 0;
 
     public static void init(Context context) {
         instance = new DataProvider();
@@ -72,54 +70,33 @@ public final class DataProvider {
                     Log.d(App.TAG, "Not connected, won't look for updates");
                 } else {
                     JsonObject movieJson = JsonService.fetchObject(Routes.discover(page));
-                    List<Genre> remoteGenres = JsonService
-                            .fetchObject(Routes.genres())
-                            .getObjectList("genres", jsonObject -> {
-                                return new Genre(
-                                        jsonObject.getInt("id"),
-                                        jsonObject.getString("name")
-                                );
-                            });
-                    List<Movie> remoteMovies = movieJson.getObjectList("results", jsonObject -> {
-                        List<Integer> genreIds = jsonObject.getIntList("genre_ids");
-                        List<Genre> genreList = new ArrayList<>();
-                        Integer movieId = jsonObject.getInt("id");
+                    List<Movie> remoteMovies = movieJson.getObjectList("results", json -> {
+                        return MovieDecoder.decode(json);
 
-                        for (Genre g : remoteGenres) {
-                            if (genreIds.contains(g.getId())) {
-                                genreList.add(g);
-                            }
-                        }
-
-                        database.insertMovieGenres(genreList, movieId);
-
-                        return new Movie(
-                                movieId,
-                                jsonObject.optString("title",""),
-                                jsonObject.optString("overview",""),
-                                jsonObject.optCalendar("release_date", "yyyy-MM-dd", Locale.getDefault(), 0),
-                                posterOf(jsonObject.optString("poster_path","")),
-                                coverOf(jsonObject.optString("backdrop_path","")),
-                                genreList,
-                                jsonObject.optInt("vote_average",0)
-                        );
+//                        return new Movie(
+//                                json.getInt("id"),
+//                                json.optString("title", ""),
+//                                json.optString("overview", ""),
+//                                json.optCalendar("release_date", "yyyy-MM-dd", Locale.getDefault(), 0),
+//                                posterOf(json.optString("poster_path", "")),
+//                                coverOf(json.optString("backdrop_path", "")),
+//                                json.optInt("vote_average", 0)
+//                        );
                     });
 
-                    totalPages = movieJson.getInt("total_pages");
-                    totalResults = movieJson.getInt("total_results");
+//                    totalPages = movieJson.getInt("total_pages");
+//                    totalResults = movieJson.getInt("total_results");
 
                     for (Movie m : remoteMovies) {
-                        contentResolver.insert(MovieProvider.URI_MOVIES,m.values());
-                    }
-
-                    for (Genre g : remoteGenres) {
-                        contentResolver.insert(MovieProvider.URI_GENRES,g.values());
+                        contentResolver.insert(MovieProvider.URI_MOVIES, m.values());
                     }
                 }
 
-                movies = Movie.parseList();
+                movies = Movie.parseList(
+                        contentResolver.query(MovieProvider.URI_MOVIES, null, null, null, null)
+                );
 
-                movies = database.getLocalMovies((page - 1) * getResultsPerPage(),getResultsPerPage());
+//                movies = database.getLocalMovies((page - 1) * getResultsPerPage(),getResultsPerPage());
 
                 Log.d(App.TAG, "Loaded records: " + movies.size());
             }
@@ -129,17 +106,5 @@ public final class DataProvider {
                 callback.onLoad(movies);
             }
         });
-    }
-
-    public Integer getResultsPerPage() {
-        return totalResults != 0 && totalPages != 0 ? totalResults / totalPages : 20;
-    }
-
-    public Integer getTotalResults() {
-        return totalResults;
-    }
-
-    public Integer getTotalPages() {
-        return totalPages;
     }
 }

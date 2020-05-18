@@ -1,15 +1,15 @@
 package com.maxpilotto.movieshowcase.models;
 
 import android.content.ContentValues;
-import android.content.Context;
 import android.database.Cursor;
 
-//import com.maxpilotto.kon.annotations.JsonEncodable;
-//import com.maxpilotto.kon.annotations.JsonProperty;
-import com.maxpilotto.movieshowcase.persistance.Database;
+import com.maxpilotto.kon.annotations.JsonDate;
+import com.maxpilotto.kon.annotations.JsonEncodable;
+import com.maxpilotto.kon.annotations.JsonProperty;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.Storable;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -22,41 +22,43 @@ import static com.maxpilotto.movieshowcase.util.Util.calendarOf;
  *
  * @see <a href="api.themoviedb.org/3/discover/movie">genre/movie/list</a>
  */
-//@JsonEncodable
+@JsonEncodable
 public class Movie implements Storable {
     private Integer id;
     private String title;
     private String overview;
 
-//    @JsonProperty(name = "release_date")
+    @JsonDate
+    @JsonProperty(name = "release_date")
     private Calendar releaseDate;
 
-//    @JsonProperty(name = "poster_path")
+    @JsonProperty(name = "poster_path")
     private String posterPath;
 
-//    @JsonProperty(name = "poster_path")
+    @JsonProperty(name = "poster_path")
     private String coverPath;
 
-//    @JsonProperty(isIgnored = true)
-    private List<Genre> genres;
-
-//    @JsonProperty(name = "vote_average")
+    @JsonProperty(name = "vote_average")
     private Integer voteAverage;
 
-//    @JsonProperty(isIgnored = true)
+    @JsonProperty(isIgnored = true)
     private Boolean favourite;
 
-//    @JsonProperty(isIgnored = true)
+    @JsonProperty(isIgnored = true)
     private Integer rating;
 
     public static List<Movie> parseList(Cursor cursor) {
-        List<Movie>
+        List<Movie> list = new ArrayList<>();
+
+        while (cursor.moveToNext()) {
+            list.add(new Movie(cursor));
+        }
+
+        return list;
     }
 
     public Movie(Cursor cursor) {
-        Integer id = cursor.getInt(cursor.getColumnIndex(MovieTable.ID));
-
-        this.id = id;
+        this.id = cursor.getInt(cursor.getColumnIndex(MovieTable.ID));
         this.title = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_TITLE));
         this.overview = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_OVERVIEW));
         this.releaseDate = calendarOf(cursor.getLong(cursor.getColumnIndex(MovieTable.COLUMN_RELEASE_DATE)));
@@ -67,32 +69,17 @@ public class Movie implements Storable {
         this.rating = cursor.getInt(cursor.getColumnIndex(MovieTable.COLUMN_RATING));
     }
 
-//    @Deprecated
-//    public Movie(Cursor cursor) {
-//        this.id = cursor.getInt(cursor.getColumnIndex(MovieTable.ID));
-//        this.title = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_TITLE));
-//        this.overview = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_OVERVIEW));
-//        this.releaseDate = calendarOf(cursor.getLong(cursor.getColumnIndex(MovieTable.COLUMN_RELEASE_DATE)));
-//        this.posterPath = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_POSTER_PATH));
-//        this.coverPath = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_COVER_PATH));
-//        this.voteAverage = cursor.getInt(cursor.getColumnIndex(MovieTable.COLUMN_VOTE_AVERAGE));
-//        this.genres = Database.get().getMovieGenres(id);
-//        this.favourite = cursor.getInt(cursor.getColumnIndex(MovieTable.COLUMN_FAVOURITE)) > 0;
-//        this.rating = cursor.getInt(cursor.getColumnIndex(MovieTable.COLUMN_RATING));
-//    }
-
-    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, List<Genre> genres, Integer voteAverage) {
-        this(id, title, overview, releaseDate, posterPath, coverPath, genres, voteAverage, false, 0);
+    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath,  Integer voteAverage) {
+        this(id, title, overview, releaseDate, posterPath, coverPath, voteAverage, false, 0);
     }
 
-    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, List<Genre> genres, Integer voteAverage, Boolean favourite, Integer rating) {
+    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, Integer voteAverage, Boolean favourite, Integer rating) {
         this.id = id;
         this.title = title;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
         this.coverPath = coverPath;
-        this.genres = genres;
         this.voteAverage = voteAverage;
         this.favourite = favourite;
         this.rating = rating;
@@ -107,7 +94,6 @@ public class Movie implements Storable {
                 ", releaseDate=" + releaseDate +
                 ", posterPath='" + posterPath + '\'' +
                 ", coverPath='" + coverPath + '\'' +
-                ", genres=" + genres +
                 ", voteAverage=" + voteAverage +
                 ", favourite=" + favourite +
                 ", rating=" + rating +
@@ -170,10 +156,6 @@ public class Movie implements Storable {
 
     public String getCoverPath() {
         return coverPath;
-    }
-
-    public List<Genre> getGenres() {
-        return genres;
     }
 
     public Integer getVoteAverage() {

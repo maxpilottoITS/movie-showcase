@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
     compileSdkVersion 29
@@ -12,6 +13,12 @@ android {
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"
+
+//        javaCompileOptions {
+//            annotationProcessorOptions {
+//                includeCompileClasspath = true
+//            }
+//        }
     }
 
     buildTypes {
@@ -34,14 +41,16 @@ android {
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    implementation 'androidx.core:core-ktx:1.0.2'
+    implementation 'androidx.core:core-ktx:1.2.0'
 
     /**
      * Third party
      */
-    implementation 'com.github.maxpilotto:kon:1.1.1'
-//    implementation 'com.github.maxpilotto:kon:dev-SNAPSHOT'
-//    annotationProcessor 'com.github.maxpilotto:kon:dev-SNAPSHOT'
+//    implementation 'com.github.maxpilotto:kon:1.1.1'
+    implementation 'com.github.maxpilotto:kon:feature-no-kapt-SNAPSHOT'
+    kapt 'com.github.maxpilotto:kon:feature-no-kapt-SNAPSHOT'
+    annotationProcessor 'com.github.maxpilotto:kon:feature-no-kapt-SNAPSHOT'
+
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
 
