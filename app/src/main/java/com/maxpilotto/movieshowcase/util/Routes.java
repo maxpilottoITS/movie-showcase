@@ -9,10 +9,6 @@ public final class Routes {
                 "&page=" + page;
     }
 
-    public static String genres() {
-        return "https://api.themoviedb.org/3/genre/movie/list?api_key=" + API_KEY;
-    }
-
     private Routes() {
     }
 }

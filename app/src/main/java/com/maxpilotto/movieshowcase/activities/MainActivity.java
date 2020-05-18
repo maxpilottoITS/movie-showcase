@@ -1,6 +1,5 @@
 package com.maxpilotto.movieshowcase.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -21,15 +20,13 @@ import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
 import com.maxpilotto.movieshowcase.models.Movie;
-import com.maxpilotto.movieshowcase.persistance.Database;
+import com.maxpilotto.movieshowcase.persistance.MovieProvider;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.services.DataProvider;
-import com.maxpilotto.movieshowcase.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.maxpilotto.movieshowcase.util.Util.isNearTheEnd;
 
 public class MainActivity extends AppCompatActivity {
     public static final String ID_EXTRA = "movie.id.extra";
@@ -73,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        loadingDialog.show();
 
-        dataProvider.getMovies(true, 1, movies -> {
+        dataProvider.getMovies(getContentResolver(), true, 1, movies -> {
 //            dataSource.clear();
             dataSource.addAll(movies);
 
@@ -100,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
 //        loadingDialog.show();
 
-        dataProvider.getMovies(true, 1, movies -> {
+        dataProvider.getMovies(getContentResolver(), true, 1, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
 
@@ -128,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFavourite(Movie item) {
-                Database.get().update(item.allValues(), "movies");
+                getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable.ID + "=" + item.getId(), null);
             }
 
             @Override
@@ -138,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.setCallback(rating -> {
                     item.setRating(rating);
 
-                    Database.get().update(item.allValues(), "movies");
+                    getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable.ID + "=" + item.getId(), null);
                 });
                 dialog.show(getSupportFragmentManager(), null);
             }
@@ -164,7 +161,7 @@ public class MainActivity extends AppCompatActivity {
                     lastPage++;
 //                    loadingDialog.show();
 
-                    dataProvider.getMovies(true, lastPage, movies -> {
+                    dataProvider.getMovies(getContentResolver(), true, lastPage, movies -> {
                         dataSource.addAll(movies);
 
                         adapter.notifyDataSetChanged();

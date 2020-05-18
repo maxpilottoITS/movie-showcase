@@ -6,9 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
-import com.maxpilotto.movieshowcase.persistance.tables.MovieWithGenresTable;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     public DatabaseHelper(@Nullable Context context) {
@@ -18,8 +16,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(MovieTable.CREATE);
-        db.execSQL(GenreTable.CREATE);
-        db.execSQL(MovieWithGenresTable.CREATE);
     }
 
     @Override

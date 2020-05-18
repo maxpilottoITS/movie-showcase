@@ -3,7 +3,6 @@ package com.maxpilotto.movieshowcase.activities;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,16 +12,11 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
-import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.persistance.MovieProvider;
-import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
-import com.maxpilotto.movieshowcase.persistance.tables.MovieWithGenresTable;
 
-import java.util.List;
 import static com.maxpilotto.movieshowcase.util.Util.coverOf;
 import static com.maxpilotto.movieshowcase.util.Util.posterOf;
 
@@ -84,19 +78,6 @@ public class DetailActivity extends AppCompatActivity {
         cursor.moveToNext();
 
         Movie movie = new Movie(cursor);
-
-        List<Genre> genres = Genre.parseList(getContentResolver().query(
-                MovieProvider.URI_GENRES_FOR_MOVIE,
-                new String[]{
-                        GenreTable.NAME + "." + GenreTable.ID,
-                        GenreTable.COLUMN_NAME
-                },
-                MovieWithGenresTable.COLUMN_MOVIE + "=" + id,
-                null,
-                null
-        ));
-
-        Log.d(App.TAG, "loadContent: " + genres.size());
 
         title.setText(movie.getTitle());
         overview.setText(movie.getOverview());

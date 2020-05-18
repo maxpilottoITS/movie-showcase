@@ -20,7 +20,7 @@ import static com.maxpilotto.movieshowcase.util.Util.calendarOf;
  * <p>
  * Movies are retrieved from the `/discover/movie` endpoint
  *
- * @see <a href="api.themoviedb.org/3/discover/movie">genre/movie/list</a>
+ * @see <a href="api.themoviedb.org/3/discover/movie">Discover</a>
  */
 @JsonEncodable
 public class Movie implements Storable {

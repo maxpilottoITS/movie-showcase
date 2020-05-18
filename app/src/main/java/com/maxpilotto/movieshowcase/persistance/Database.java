@@ -4,14 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import com.maxpilotto.movieshowcase.App;
-import com.maxpilotto.movieshowcase.models.Genre;
 import com.maxpilotto.movieshowcase.models.Movie;
-import com.maxpilotto.movieshowcase.persistance.tables.GenreTable;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
-import com.maxpilotto.movieshowcase.persistance.tables.MovieWithGenresTable;
 import com.maxpilotto.movieshowcase.protocols.Storable;
 
 import java.util.ArrayList;
@@ -35,21 +30,9 @@ public class Database {
     private Database() {
     }
 
-    public <T extends Storable> void insertOrUpdate(List<T> values, String table) {
-        for (Storable value : values) {
-            insertOrUpdate(value.values(), table);
-        }
-    }
-
     public <T extends Storable> void insert(List<Storable> values, String table) {
         for (Storable value : values) {
             insert(value.values(), table);
-        }
-    }
-
-    public void insertOrUpdate(ContentValues values, String table) {
-        if (insert(values, table) == -1) {
-            update(values, table);
         }
     }
 
@@ -62,31 +45,9 @@ public class Database {
         );
     }
 
-    public void update(ContentValues values, String table) {
-        int result = database.update(table, values, GenreTable.ID + "=?", new String[]{values.getAsString(GenreTable.ID)});
-    }
-
     public void insertMovies(List<Movie> movies) {
         for (Movie m : movies) {
             insert(m.values(), MovieTable.NAME);
-        }
-    }
-
-    public void insertGenres(List<Genre> genres) {
-        for (Genre g : genres) {
-            insert(g.values(), GenreTable.COLUMN_NAME);
-        }
-    }
-
-    public void insertMovieGenres(List<Genre> genres, Integer movieId) {
-        for (Genre g : genres) {
-            ContentValues values = new ContentValues();
-
-            values.put(MovieWithGenresTable.ID,movieId + g.getId());
-            values.put(MovieWithGenresTable.COLUMN_MOVIE, movieId);
-            values.put(MovieWithGenresTable.COLUMN_GENRE, g.getId());
-
-            insert(values, MovieWithGenresTable.NAME);
         }
     }
 
@@ -123,22 +84,5 @@ public class Database {
 
         cursor.close();
         return movies;
-    }
-
-    @Deprecated()
-    public List<Genre> getMovieGenres(Integer movie) {
-        List<Genre> genres = new ArrayList<>();
-        Cursor cursor = rawQuery(
-                database,
-                "SELECT * FROM genres,movie_genres WHERE movie_genres.genre = genres.id AND movie_genres.movie=?",
-                movie
-        );
-
-        while (cursor.moveToNext()) {
-            genres.add(new Genre(cursor));
-        }
-
-        cursor.close();
-        return genres;
     }
 }
