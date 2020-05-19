@@ -104,7 +104,7 @@ public class Movie implements Storable {
     public ContentValues values() {
         ContentValues values = new ContentValues();
 
-        values.put(MovieTable._ID, id);
+//        values.put(MovieTable._ID, id);
         values.put(MovieTable.COLUMN_TITLE, title);
         values.put(MovieTable.COLUMN_OVERVIEW, overview);
         values.put(MovieTable.COLUMN_RELEASE_DATE, releaseDate.getTimeInMillis());

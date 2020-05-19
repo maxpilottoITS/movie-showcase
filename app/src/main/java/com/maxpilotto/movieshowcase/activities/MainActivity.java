@@ -1,6 +1,5 @@
 package com.maxpilotto.movieshowcase.activities;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;

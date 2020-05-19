@@ -2,23 +2,19 @@ package com.maxpilotto.movieshowcase.services;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Bundle;
 import android.util.Log;
 
-import com.maxpilotto.kon.JsonArray;
 import com.maxpilotto.kon.JsonObject;
 import com.maxpilotto.kon.net.JsonService;
 import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.models.MovieDecoder;
-import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.persistance.MovieProvider;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieUpdateCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
@@ -63,10 +59,6 @@ public final class DataProvider {
                 if (!requestNewData) {
                     Log.d(App.TAG, "No new data was requested, won't look for updates");
                 } else if (!hasInternet()) {
-//                    movies = Movie.parseList(
-//                            contentResolver.query(MovieProvider.URI_MOVIES,null,null,null,null)
-//                    );
-
                     Log.d(App.TAG, "Not connected, won't look for updates");
                 } else {
                     JsonObject json = JsonService.fetchObject(Routes.discover(page));
@@ -77,11 +69,19 @@ public final class DataProvider {
 
                     for (Movie m : remoteMovies) {
                         contentResolver.insert(MovieProvider.URI_MOVIES, m.values());
-
-                        Log.d(App.TAG, "Downloaded: " + m);
                     }
 
-                    movies = Database.get().getLocalMovies((page - 1) * getResultsPerPage(),getResultsPerPage());
+                    movies = Movie.parseList(contentResolver.query(
+                            MovieProvider.URI_MOVIES,
+                            null,
+                            null,
+                            null,
+                            String.format("%s ASC LIMIT %d,%d",
+                                    MovieTable._ID,
+                                    (page - 1) * getResultsPerPage(),
+                                    getResultsPerPage()
+                            )
+                    ));
                 }
 
 

@@ -9,11 +9,11 @@ import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.Storable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static com.maxpilotto.movieshowcase.util.Util.rawQuery;
 
+@Deprecated
 public class Database {
     private static Database instance;
     private SQLiteDatabase database;

@@ -14,7 +14,7 @@ public class MovieTable implements BaseColumns {
 
     public static final String NAME = "movies";
     public static final String CREATE = "CREATE TABLE " + NAME + "(" +
-            _ID + " INTEGER PRIMARY KEY," +
+            _ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             COLUMN_TITLE + " TEXT," +
             COLUMN_OVERVIEW + " TEXT," +
             COLUMN_RELEASE_DATE + " INTEGER," +

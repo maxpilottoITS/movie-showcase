@@ -2,7 +2,6 @@ package com.maxpilotto.movieshowcase;
 
 import android.app.Application;
 
-import com.maxpilotto.movieshowcase.persistance.Database;
 import com.maxpilotto.movieshowcase.services.DataProvider;
 
 public class App extends Application {
@@ -13,6 +12,5 @@ public class App extends Application {
         super.onCreate();
 
         DataProvider.init(this);
-        Database.init(this);
     }
 }
