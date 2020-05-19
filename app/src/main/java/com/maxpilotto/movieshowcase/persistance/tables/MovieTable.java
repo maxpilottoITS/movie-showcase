@@ -3,7 +3,6 @@ package com.maxpilotto.movieshowcase.persistance.tables;
 import android.provider.BaseColumns;
 
 public class MovieTable implements BaseColumns {
-    public static final String ID = "id";
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_OVERVIEW = "overview";
     public static final String COLUMN_RELEASE_DATE = "releaseDate";
@@ -15,7 +14,7 @@ public class MovieTable implements BaseColumns {
 
     public static final String NAME = "movies";
     public static final String CREATE = "CREATE TABLE " + NAME + "(" +
-            ID + " INTEGER PRIMARY KEY," +
+            _ID + " INTEGER PRIMARY KEY," +
             COLUMN_TITLE + " TEXT," +
             COLUMN_OVERVIEW + " TEXT," +
             COLUMN_RELEASE_DATE + " INTEGER," +

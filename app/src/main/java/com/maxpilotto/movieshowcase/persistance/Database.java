@@ -75,14 +75,8 @@ public class Database {
      * @param offset Offset for the query
      */
     public List<Movie> getLocalMovies(Integer offset, Integer count) {
-        List<Movie> movies = new ArrayList<>();
-        Cursor cursor = rawQuery(database, "SELECT * FROM movies ORDER BY releaseDate LIMIT ?,?", offset, count);
+        Cursor cursor = rawQuery(database, "SELECT * FROM movies LIMIT ?,?", offset, count);
 
-        while (cursor.moveToNext()) {
-            movies.add(new Movie(cursor));
-        }
-
-        cursor.close();
-        return movies;
+        return Movie.parseList(cursor);
     }
 }

@@ -1,5 +1,6 @@
 package com.maxpilotto.movieshowcase.activities;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFavourite(Movie item) {
-                getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable.ID + "=" + item.getId(), null);
+                getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable._ID + "=" + item.getId(), null);
             }
 
             @Override
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
                 dialog.setCallback(rating -> {
                     item.setRating(rating);
 
-                    getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable.ID + "=" + item.getId(), null);
+                    getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable._ID + "=" + item.getId(), null);
                 });
                 dialog.show(getSupportFragmentManager(), null);
             }

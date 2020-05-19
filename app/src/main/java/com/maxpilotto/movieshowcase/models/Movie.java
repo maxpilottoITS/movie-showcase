@@ -58,7 +58,7 @@ public class Movie implements Storable {
     }
 
     public Movie(Cursor cursor) {
-        this.id = cursor.getInt(cursor.getColumnIndex(MovieTable.ID));
+        this.id = cursor.getInt(cursor.getColumnIndex(MovieTable._ID));
         this.title = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_TITLE));
         this.overview = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_OVERVIEW));
         this.releaseDate = calendarOf(cursor.getLong(cursor.getColumnIndex(MovieTable.COLUMN_RELEASE_DATE)));
@@ -104,7 +104,7 @@ public class Movie implements Storable {
     public ContentValues values() {
         ContentValues values = new ContentValues();
 
-        values.put(MovieTable.ID, id);
+        values.put(MovieTable._ID, id);
         values.put(MovieTable.COLUMN_TITLE, title);
         values.put(MovieTable.COLUMN_OVERVIEW, overview);
         values.put(MovieTable.COLUMN_RELEASE_DATE, releaseDate.getTimeInMillis());

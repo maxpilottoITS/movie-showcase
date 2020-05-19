@@ -71,7 +71,7 @@ public class DetailActivity extends AppCompatActivity {
         Cursor cursor = getContentResolver().query(
                 MovieProvider.URI_MOVIES,
                 null,
-                MovieTable.ID + "=" + id,
+                MovieTable._ID + "=" + id,
                 null,
                 null
         );

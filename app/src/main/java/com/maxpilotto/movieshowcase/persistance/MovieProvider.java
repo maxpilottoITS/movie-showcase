@@ -51,7 +51,7 @@ public class MovieProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case SINGLE_MOVIE:
                 builder.setTables(MovieTable.NAME);
-                builder.appendWhere(MovieTable.ID + " = " + uri.getLastPathSegment());
+                builder.appendWhere(MovieTable._ID + " = " + uri.getLastPathSegment());
                 break;
 
             case ALL_MOVIES:
@@ -102,7 +102,7 @@ public class MovieProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case SINGLE_MOVIE:
                 table = MovieTable.NAME;
-                query = MovieTable.ID + " = " + uri.getLastPathSegment();
+                query = MovieTable._ID + " = " + uri.getLastPathSegment();
                 if (selection != null) {
                     query += " AND " + selection;
                 }
@@ -129,7 +129,7 @@ public class MovieProvider extends ContentProvider {
         switch (uriMatcher.match(uri)) {
             case SINGLE_MOVIE:
                 table = MovieTable.NAME;
-                query = MovieTable.ID + " = " + uri.getLastPathSegment();
+                query = MovieTable._ID + " = " + uri.getLastPathSegment();
                 if (selection != null) {
                     query += " AND " + selection;
                 }
