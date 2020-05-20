@@ -10,4 +10,5 @@
     <string name="loadingMessage">Please wait ...</string>
     <string name="noInternet">No internet connection found</string>
     <string name="refresh">Refresh</string>
+    <string name="defaultPreferences">movie_showcase_default</string>
 </resources>
