@@ -1,5 +1,4 @@
 <resources>
-
     <style name="LightTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">#ffffff</item>
         <item name="android:statusBarColor">#cccccc</item>
@@ -34,15 +33,4 @@
     <style name="ToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
-
-
-    <!--    <style name="LightTheme.NoActionBar">-->
-    <!--        <item name="windowActionBar">false</item>-->
-    <!--        <item name="windowNoTitle">true</item>-->
-    <!--    </style>-->
-
-    <!--    <style name="LightTheme.AppBarOverlay" parent="ThemeOverlay.MaterialComponents.Dark.ActionBar" />-->
-
-    <!--    <style name="LightTheme.PopupOverlay" parent="ThemeOverlay.MaterialComponents.Light" />-->
-
 </resources>

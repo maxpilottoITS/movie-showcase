@@ -1,19 +1,14 @@
 package com.maxpilotto.movieshowcase.activities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,12 +23,11 @@ import com.maxpilotto.movieshowcase.persistance.MovieProvider;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.services.DataProvider;
-import com.maxpilotto.movieshowcase.util.Settings;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends ThemedActivity {
     public static final String ID_EXTRA = "movie.id.extra";
     public static final String DO_UPDATE_EXTRA = "service.do_update.extra";
     public static final String LAST_PAGE_EXTRA = "service.last_page.extra";
@@ -47,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
     //    private Boolean shouldUpdate = true;
     private Integer lastPage = 1;
     //    private ProgressDialog loadingDialog;
-    private Integer currentTheme = 0;
-    private SharedPreferences preferences;
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -60,11 +52,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        preferences = getSharedPreferences(Settings.DEFAULT_PREFERENCES, MODE_PRIVATE);
-        currentTheme = preferences.getInt(Settings.CURRENT_THEME, R.style.LightTheme);
-
-        setTheme(currentTheme);
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
 
@@ -91,27 +78,6 @@ public class MainActivity extends AppCompatActivity {
 
 //            loadingDialog.dismiss();
         });
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
-
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.toggleTheme:
-                currentTheme = currentTheme == R.style.LightTheme ? R.style.DarkTheme : R.style.LightTheme;
-                preferences.edit().putInt(Settings.CURRENT_THEME, currentTheme).apply();
-
-                recreate();
-                break;
-        }
-
-        return true;
     }
 
     private void restoreData(Bundle savedInstanceState) {
