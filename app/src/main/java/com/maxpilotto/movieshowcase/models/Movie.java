@@ -35,7 +35,7 @@ public class Movie implements Storable {
     @JsonProperty(name = "poster_path")
     private String posterPath;
 
-    @JsonProperty(name = "poster_path")
+    @JsonProperty(name = "backdrop_path")
     private String coverPath;
 
     @JsonProperty(name = "vote_average")
