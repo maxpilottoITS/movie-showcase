@@ -50,15 +50,42 @@ public final class DataProvider {
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
-    public void getMovies(ContentResolver contentResolver, Boolean requestNewData, Integer page, MovieUpdateCallback callback) {
-        asyncTask(true, new AsyncTaskSimpleCallback() {
+    /**
+     * Fetches the movies from the first record until pageCount * resultsPerPage
+     */
+    public void restoreMovies(ContentResolver contentResolver, Integer pageCount, MovieUpdateCallback callback) {
+        asyncTask(new AsyncTaskSimpleCallback() {
             List<Movie> movies = new ArrayList<>();
 
             @Override
             public void run(AsyncTask task) {
-                if (!requestNewData) {
-                    Log.d(App.TAG, "No new data was requested, won't look for updates");
-                } else if (!hasInternet()) {
+                movies = Movie.parseList(contentResolver.query(
+                        MovieProvider.URI_MOVIES,
+                        null,
+                        null,
+                        null,
+                        String.format("%s ASC LIMIT %d,%d",
+                                MovieTable._ID,
+                                0,
+                                getResultsPerPage() * pageCount
+                        )
+                ));
+            }
+
+            @Override
+            public void onComplete() {
+                callback.onLoad(movies);
+            }
+        });
+    }
+
+    public void getMovies(ContentResolver contentResolver, Integer page, MovieUpdateCallback callback) {
+        asyncTask(new AsyncTaskSimpleCallback() {
+            List<Movie> movies = new ArrayList<>();
+
+            @Override
+            public void run(AsyncTask task) {
+                if (!hasInternet()) {
                     Log.d(App.TAG, "Not connected, won't look for updates");
                 } else {
                     JsonObject json = JsonService.fetchObject(Routes.discover(page));

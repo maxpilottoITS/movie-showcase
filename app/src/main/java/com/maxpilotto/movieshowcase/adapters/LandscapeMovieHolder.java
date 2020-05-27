@@ -30,7 +30,7 @@ public class LandscapeMovieHolder extends MovieHolder {
 
     @Override
     public void bind(Movie movie, MovieCellCallback callback) {
-        if (!movie.getPosterPath().equals("null")) {
+        if (!movie.getPosterPath().isEmpty()) { //TODO Load the empty image
             Glide.with(context)
                     .load(posterOf(movie.getPosterPath()))
                     .into(poster);

@@ -33,16 +33,6 @@ public final class Util {
     }
 
     public static AsyncTask asyncTask(Boolean autoStart, AsyncTaskSimpleCallback callback) {
-        AsyncTask task = asyncTask(callback);
-
-        if (autoStart) {
-            task.execute();
-        }
-
-        return task;
-    }
-
-    public static AsyncTask asyncTask(AsyncTaskSimpleCallback callback) {
         AsyncTask task = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
@@ -58,7 +48,15 @@ public final class Util {
             }
         };
 
+        if (autoStart) {
+            task.execute();
+        }
+
         return task;
+    }
+
+    public static AsyncTask asyncTask(AsyncTaskSimpleCallback callback) {
+        return asyncTask(true,callback);
     }
 
     public static Cursor rawQuery(SQLiteDatabase database, String query, Object... args) {

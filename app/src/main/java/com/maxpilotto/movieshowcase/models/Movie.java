@@ -29,16 +29,16 @@ public class Movie implements Storable {
     private String overview;
 
     @JsonDate
-    @JsonProperty(name = "release_date")
+    @JsonProperty(name = "release_date", isOptional = true, defaultValue = "null")
     private Calendar releaseDate;
 
-    @JsonProperty(name = "poster_path")
+    @JsonProperty(name = "poster_path",isOptional = true)
     private String posterPath;
 
-    @JsonProperty(name = "backdrop_path")
+    @JsonProperty(name = "backdrop_path",isOptional = true)
     private String coverPath;
 
-    @JsonProperty(name = "vote_average")
+    @JsonProperty(name = "vote_average",isOptional = true, defaultValue = "0")
     private Integer voteAverage;
 
     @JsonProperty(isIgnored = true)

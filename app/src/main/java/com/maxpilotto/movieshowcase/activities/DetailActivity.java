@@ -85,10 +85,10 @@ public class DetailActivity extends ThemedActivity {
         year.setText(getString(R.string.year, movie.getYear()));
 
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
-            glide.load(coverOf(movie.getCoverPath()))
+            glide.load(movie.getCoverPath().isEmpty() ? R.drawable.noimg : coverOf(movie.getCoverPath()))
                     .into((ImageView) findViewById(R.id.backdrop));
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            glide.load(posterOf(movie.getPosterPath()))
+            glide.load(movie.getPosterPath().isEmpty() ? R.drawable.noimg : posterOf(movie.getPosterPath()))
                     .into((ImageView) findViewById(R.id.poster));
         }
     }

@@ -36,17 +36,18 @@ public class MainActivity extends ThemedActivity {
     private MovieAdapter adapter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private Button refreshNoMovies;
-    private List<Movie> dataSource;
     private DataProvider dataProvider;
-    //    private Boolean shouldUpdate = true;
+    private Boolean doUpdate = true;
     private Integer lastPage = 1;
     //    private ProgressDialog loadingDialog;
+    private List<Movie> dataSource = new ArrayList<>();
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
 
-//        outState.putBoolean(DO_UPDATE_EXTRA, shouldUpdate);
+        outState.putBoolean(DO_UPDATE_EXTRA, doUpdate);
+        outState.putInt(LAST_PAGE_EXTRA, lastPage);
     }
 
     @Override
@@ -59,31 +60,34 @@ public class MainActivity extends ThemedActivity {
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         refreshNoMovies = findViewById(R.id.refreshNoMovies);
 
-        dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
         dataProvider = DataProvider.get();
 
-        restoreData(savedInstanceState);
+        if (savedInstanceState != null){
+            doUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA, true);
+            lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA, 1);
+        }
 
         loadContent();
 
 //        loadingDialog.show();
 
-        dataProvider.getMovies(getContentResolver(), true, 1, movies -> {
-//            dataSource.clear();
-            dataSource.addAll(movies);
-
-            adapter.notifyDataSetChanged();
-//            shouldUpdate = false;
+        if (doUpdate) {
+            dataProvider.getMovies(getContentResolver(), 1, movies -> {
+                dataSource.addAll(movies);
+                adapter.notifyDataSetChanged();
+                doUpdate = false;
 
 //            loadingDialog.dismiss();
-        });
-    }
+                Toast.makeText(this,"Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
+            });
+        } else {
+            dataProvider.restoreMovies(getContentResolver(), lastPage, movies -> {
+                dataSource.addAll(movies);
+                adapter.notifyDataSetChanged();
 
-    private void restoreData(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-//            shouldUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA);
-//            lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA);
+                Toast.makeText(this,"Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
+            });
         }
     }
 
@@ -96,7 +100,7 @@ public class MainActivity extends ThemedActivity {
 
 //        loadingDialog.show();
 
-        dataProvider.getMovies(getContentResolver(), true, 1, movies -> {
+        dataProvider.getMovies(getContentResolver(), 1, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
 
@@ -160,7 +164,7 @@ public class MainActivity extends ThemedActivity {
                     lastPage++;
 //                    loadingDialog.show();
 
-                    dataProvider.getMovies(getContentResolver(), true, lastPage, movies -> {
+                    dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
                         dataSource.addAll(movies);
 
                         adapter.notifyDataSetChanged();

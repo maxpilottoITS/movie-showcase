@@ -47,9 +47,9 @@ dependencies {
      * Third party
      */
 //    implementation 'com.github.maxpilotto:kon:1.1.1'
-    implementation 'com.github.maxpilotto:kon:feature-no-kapt-SNAPSHOT'
-    kapt 'com.github.maxpilotto:kon:feature-no-kapt-SNAPSHOT'
-    annotationProcessor 'com.github.maxpilotto:kon:feature-no-kapt-SNAPSHOT'
+    implementation('com.github.maxpilotto:kon:dev-SNAPSHOT') { changing = true }
+    kapt('com.github.maxpilotto:kon:dev-SNAPSHOT') { changing = true }
+    annotationProcessor('com.github.maxpilotto:kon:dev-SNAPSHOT') { changing = true }
 
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'

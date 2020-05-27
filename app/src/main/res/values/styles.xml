@@ -17,6 +17,7 @@
         <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorSurface">#303030</item>
         <item name="android:colorBackground">#303030</item>
+        <item name="android:windowBackground">?android:attr/colorBackground</item>
         <item name="colorOnPrimary">#eeeeee</item>
         <item name="android:textColorPrimary">#eeeeee</item>
         <item name="android:textColorSecondary">#eeeeee</item>
