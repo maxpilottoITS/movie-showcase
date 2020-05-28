@@ -9,6 +9,9 @@
         <item name="colorControlNormal">?attr/colorOnPrimary</item>
 
         <item name="toolbarStyle">@style/ToolbarStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Alert.Button.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Alert.Button.Neutral</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Alert.Button.Neutral</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
@@ -17,7 +20,7 @@
         <item name="colorSecondary">@color/colorAccent</item>
         <item name="colorSurface">#303030</item>
         <item name="android:colorBackground">#303030</item>
-        <item name="android:windowBackground">?android:attr/colorBackground</item>
+        <item name="android:background">#303030</item>
         <item name="colorOnPrimary">#eeeeee</item>
         <item name="android:textColorPrimary">#eeeeee</item>
         <item name="android:textColorSecondary">#eeeeee</item>
@@ -25,6 +28,9 @@
         <item name="colorControlNormal">?attr/colorOnPrimary</item>
 
         <item name="toolbarStyle">@style/ToolbarStyle</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Alert.Button.Positive</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Alert.Button.Neutral</item>
+        <item name="buttonBarNeutralButtonStyle">@style/Alert.Button.Neutral</item>
     </style>
 
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
@@ -33,5 +39,13 @@
 
     <style name="ToolbarTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">?attr/colorOnPrimary</item>
+    </style>
+
+    <style name="Alert.Button.Positive" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <style name="Alert.Button.Neutral" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 </resources>

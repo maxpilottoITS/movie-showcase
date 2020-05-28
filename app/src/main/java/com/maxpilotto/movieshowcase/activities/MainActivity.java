@@ -79,14 +79,14 @@ public class MainActivity extends ThemedActivity {
                 doUpdate = false;
 
 //            loadingDialog.dismiss();
-                Toast.makeText(this, "Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
         } else {
             dataProvider.restoreMovies(getContentResolver(), lastPage, movies -> {
                 dataSource.addAll(movies);
                 adapter.notifyDataSetChanged();
 
-                Toast.makeText(this, "Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
         }
     }
