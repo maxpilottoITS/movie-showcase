@@ -95,22 +95,24 @@ public final class DataProvider {
                     totalResults = json.getInt("total_results");
 
                     for (Movie m : remoteMovies) {
+                        //TODO Check if the movie is already there by searching the description and title together,
+                        // since the ID from the API service is different from the one stored locally
+
                         contentResolver.insert(MovieProvider.URI_MOVIES, m.values());
                     }
-
-                    movies = Movie.parseList(contentResolver.query(
-                            MovieProvider.URI_MOVIES,
-                            null,
-                            null,
-                            null,
-                            String.format("%s ASC LIMIT %d,%d",
-                                    MovieTable._ID,
-                                    (page - 1) * getResultsPerPage(),
-                                    getResultsPerPage()
-                            )
-                    ));
                 }
 
+                movies = Movie.parseList(contentResolver.query(
+                        MovieProvider.URI_MOVIES,
+                        null,
+                        null,
+                        null,
+                        String.format("%s ASC LIMIT %d,%d",
+                                MovieTable._ID,
+                                (page - 1) * getResultsPerPage(),
+                                getResultsPerPage()
+                        )
+                ));
 
                 Log.d(App.TAG, "Loaded records: " + movies.size());
             }

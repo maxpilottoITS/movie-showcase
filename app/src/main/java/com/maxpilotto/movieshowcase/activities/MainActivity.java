@@ -63,7 +63,7 @@ public class MainActivity extends ThemedActivity {
         adapter = new MovieAdapter(dataSource);
         dataProvider = DataProvider.get();
 
-        if (savedInstanceState != null){
+        if (savedInstanceState != null) {
             doUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA, true);
             lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA, 1);
         }
@@ -79,14 +79,14 @@ public class MainActivity extends ThemedActivity {
                 doUpdate = false;
 
 //            loadingDialog.dismiss();
-                Toast.makeText(this,"Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
         } else {
             dataProvider.restoreMovies(getContentResolver(), lastPage, movies -> {
                 dataSource.addAll(movies);
                 adapter.notifyDataSetChanged();
 
-                Toast.makeText(this,"Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
         }
     }
@@ -160,7 +160,7 @@ public class MainActivity extends ThemedActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
-                if (!recyclerView.canScrollVertically(1) && dy > 0) {
+                if (!recyclerView.canScrollVertically(1) && dy > 0 && dataProvider.hasInternet()) {
                     lastPage++;
 //                    loadingDialog.show();
 
@@ -171,13 +171,9 @@ public class MainActivity extends ThemedActivity {
 
 //                        loadingDialog.dismiss();
                     });
+
                     Log.d(App.TAG, "Reached the end");
                 }
-
-                //TODO Request new page
-                // The getLocalMovie should return all the movies till (last page * 20)
-                // The service should only return the 20 new movies
-                // All of these numbers should be taken from the service
             }
         });
 
