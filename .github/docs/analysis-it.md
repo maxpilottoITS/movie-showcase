@@ -1,95 +1,60 @@
-# Movie Showcase - Analisi
+# Movie Showcase
 
-Movie Showcase è un applicazione che dà la possibilità all'utente di visualizzare una libreria di film, dare un rating, creare preferiti e nascondere
+Movie Showcase è un'applicazione Android nativa che permette di visualizzare una collezione di film estratti dal servizio TheMovieDB, questi film possono essere valutati e messi nei preferiti localmente.
 
-## Backend
-I film verranno scaricati utilizzando un servizio di terze parti, [TheMovieDB](https://www.themoviedb.org), il quale mette a disposizione vari dati riguardanti molti film, I dati potrebbero essere strippati per eliminare informazioni non necessarie
+## Recupero dati film
+I film verranno scaricati utilizzando un servizio di terze parti, [TheMovieDB](https://www.themoviedb.org), il quale mette a disposizione vari dati riguardanti molti film.  
+I dati potrebbero essere strippati per eliminare informazioni non necessarie
 
 Si sceglie di usare TMDB, perchè la documentazione è più veloce da consultare ed è più chiara rispetto ad altri servizi
 
-## Schermata principale
+## Fetch e parse JSON 
 
-Mostra una lista di film ed ha le seguenti funzionalità di base
+I dati saranno scaricati usando la libreria [Kon](https://github.com/maxpilotto/kon), la quale è stato sviluppata internamente e si occupa anche del parsing dei dati
 
-+ Lista implementata con RecyclerView
-+ Ogni item della lista ha le seguenti opzioni
-    + Rating, al click viene mostrato un alert dove si può dare un rating a stelle
-    + Preferito, al click viene cambiato lo stato di preferito sull'item
-+ Mostra schermata senza dati
-+ Rotazione supportata
+Rispetto alla libreria standard inclusa nell'SDK di Android questa mette a disposizione:
 
-Funzionalità extra
++ Support per i tipi URL, IntRange, Enum, Date e Calendar
++ Parsing automatico di un modello Java/Kotlin
++ Fetch di risorse JSON dalla rete
 
-+ La toolbar di questa schermata ha le seguenti opzioni
-    + Mostra/Nascondi preferiti
-    + Mostra/Nascondi film nascosti
-    + Refresh
-    + Impostazioni
-+ Pull to refresh Refresh dei film facendo uno swipe dall'alto verso il basso
-+ Infinite scroll Scroll almost-endless, che carica una nuova pagina ogni volta che si raggiunge la fine della lista
+## Lista film
 
-#### Gestione lista 
-
-La lista viene gestita con una RecyclerView, per questioni di performance e funzionalità, la lista inoltre avrà la funzionalità di swipe-to-refresh, la quale terrà conto dell'item a cui si è arrivati
+La lista viene gestita con una RecyclerView, per questioni di performance e funzionalità
 
 Lo scrolling sarà "infinito", raggiunta la fine o un punto vicino alla fine, verrà scaricata la prossima pagina di film e/o caricato da locale il gruppo di "nuovi" film
 
-#### Image loading and caching
+## Image loading and caching
 
-Per caricare le immagini nelle varie cella si decide di usare [Glide](https://github.com/bumptech/glide), perchè non è mai stata usata ed è più aggiornata rispetto a Picasso
+Per caricare le immagini nelle varie cella si decide di usare [Glide](https://github.com/bumptech/glide), perchè risulta più aggiornata della controparte Picasso
 
-#### Json parsing
-
-I dati verranno scaricati e convertiti usando la libreria [Kon](https://github.com/maxpilotto/kon), perchè sviluppata internamente
-
-La libreria si occupa anche della parte di networking
-
-#### Persistence
+## Persistence
 
 I dati, non appena scaricati, saranno memorizzati nel db interno all' app, usando SQLite, senza nessun framework
 
 Se un dato è già presente nel db, i dati di questo verranno sovrascritti con quelli più aggiornati, ad eccezzione dei valori che non arrivano dalla rete, come lo stato di preferito o il rating (quello locale, non quello della piattaforma)
 
-#### Workflow dati
+Sarà anche inoltrato un content provider
 
-All'avvio dell'app
+## Schermate
 
-+ I dati verranno scaricati dal servizio
-    + Se il servizio o internet non sono disponibili, questo step viene saltato
-+ I dati vengono caricati dal database, precedentemente scaricati e caricati nel db
-    + Se il db è vuoto, viene mostrato un errore all'utente
+#### Schermata principale
 
-## Schermata dettaglio
+Questa schermata si occupa della visualizzazione della lista dei film, del rating e del settaggio dei preferiti
+
+Ogni item sulla lista ha le opzioni per:
+
++ Rating, al click viene mostrato un alert dove si può dare un rating a stelle
++ Preferito, al click viene cambiato lo stato di preferito sull'item
+
+#### Schermata dettaglio
+
+Questa schermata si occupa della visualizzazione dei dati di un film, tra cui data di rilascio, valutazione utenti, valutazione personale, descrizione film e un immagine che fa da cover
 
 La schermata dettaglio riceverà l'id del film tramite un extra passato nell'intent di creazione della nuova activity, quest'ultima ricaricherà dal db i dati del film
 
-Funzionalità extra
-+ Preferito, Nascosot e Rating direttamente da questa schermata
+## Funzionalità extra
 
-## Impostazioni
-    
-La schermata di impostazioni è opzionale e mostrerà le seguenti opzioni
- 
-+ Data
-    + Lingua film, si può cambiare la lingua e metterla diversa dal Locale corrente
-    + Mostra film nascosti, mostra activity dove si possono togliere dalla lista dei nascosti
-    + Clear data
-+ About
-    + Developer
-    + Source
-    + Licenses
-    + GDPR
-
-## Librerie
-
-+ [Glide](https://github.com/bumptech/glide)
-+ [Kon](https://github.com/maxpilotto/kon)
-
-## Tasks
-
-+ Creazione modelli, basandosi sui dati del servizio
-+ Creazione db e conversione db => modelli, json => db, modelli => db
-+ Creazione lista/adapter
-+ Fetch dati
-+ Aggiornamento dati locali
-+ Funzionalità aggiuntive lista (preferiti, nascondi, rating)
++ Supporto rotazione, diversi layout per landscape e portrait
++ Endless scroll, i film si potranno scrollare in modo "infinito"
++ Temi light/dark, l'app permette di passare da tema chiaro a scuro e viceversa
