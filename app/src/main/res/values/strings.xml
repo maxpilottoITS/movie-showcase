@@ -11,4 +11,8 @@
     <string name="noInternet">No internet connection found</string>
     <string name="refresh">Refresh</string>
     <string name="defaultPreferences">movie_showcase_default</string>
+    <string name="theme_auto">Auto (System default)</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="themeTitle">Select theme</string>
 </resources>

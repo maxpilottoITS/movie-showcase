@@ -1,33 +1,23 @@
 <resources>
-    <style name="BaseTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+    <style name="BaseTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="toolbarStyle">@style/ToolbarStyle</item>
         <item name="buttonBarPositiveButtonStyle">@style/Alert.Button.Positive</item>
         <item name="buttonBarNegativeButtonStyle">@style/Alert.Button.Neutral</item>
         <item name="buttonBarNeutralButtonStyle">@style/Alert.Button.Neutral</item>
     </style>
 
-    <style name="LightTheme" parent="BaseTheme">
-        <item name="colorPrimary">#ffffff</item>
-        <item name="android:statusBarColor">#cccccc</item>
-        <item name="colorSecondary">@color/colorAccent</item>
-        <item name="colorOnPrimary">#202020</item>
-        <item name="android:textColorPrimary">#202020</item>
-        <item name="android:textColorSecondary">#202020</item>
-        <item name="colorControlNormal">?attr/colorOnPrimary</item>
-    </style>
-
-    <style name="DarkTheme" parent="BaseTheme">
-        <item name="colorPrimary">#303030</item>
-        <item name="android:statusBarColor">#303030</item>
-        <item name="colorSecondary">@color/colorAccent</item>
-        <item name="colorSurface">#303030</item>
-        <item name="android:colorBackground">#303030</item>
-        <item name="android:background">#303030</item>
-        <item name="colorOnPrimary">#eeeeee</item>
-        <item name="android:textColorPrimary">#eeeeee</item>
-        <item name="android:textColorSecondary">#eeeeee</item>
-        <item name="android:textColor">#eeeeee</item>
-        <item name="colorControlNormal">?attr/colorOnPrimary</item>
+    <style name="AppTheme" parent="BaseTheme">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="android:statusBarColor">@color/statusBarColor</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSurface">@color/colorPrimary</item>
+        <item name="android:colorBackground">@color/colorPrimary</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorOnPrimary</item>
+        <item name="android:textColorPrimary">@color/textColorPrimary</item>
+        <item name="android:textColorSecondary">@color/textColorSecondary</item>
+        <item name="android:textColor">@color/textColor</item>
+        <item name="colorControlNormal">@color/colorControlNormal</item>
     </style>
 
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">

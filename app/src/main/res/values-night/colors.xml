@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#303030</color>
+    <color name="statusBarColor">#303030</color>
+    <color name="colorSecondary">#0077c2</color>
+    <color name="colorSurface">#303030</color>
+    <color name="colorBackground">#303030</color>
+    <color name="background">#303030</color>
+    <color name="colorOnPrimary">#eeeeee</color>
+    <color name="textColorPrimary">#eeeeee</color>
+    <color name="textColorSecondary">#eeeeee</color>
+    <color name="textColor">#eeeeee</color>
+    <color name="colorControlNormal">#eeeeee</color>
+</resources>
