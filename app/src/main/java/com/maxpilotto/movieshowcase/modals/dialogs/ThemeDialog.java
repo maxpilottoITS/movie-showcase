@@ -8,12 +8,18 @@ import android.widget.RadioGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.DialogFragment;
 
 import com.maxpilotto.movieshowcase.R;
 
 public class ThemeDialog extends DialogFragment {
     private Callback callback;
+    private int mode;
+
+    public ThemeDialog(int mode) {
+        this.mode = mode;
+    }
 
     @NonNull
     @Override
@@ -24,6 +30,22 @@ public class ThemeDialog extends DialogFragment {
                 .setTitle(R.string.themeTitle)
                 .setView(content)
                 .create();
+
+        switch (mode) {
+            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
+            case AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY:
+                group.check(R.id.auto);
+                break;
+
+            case AppCompatDelegate.MODE_NIGHT_NO:
+                group.check(R.id.light);
+
+                break;
+
+            case AppCompatDelegate.MODE_NIGHT_YES:
+                group.check(R.id.dark);
+                break;
+        }
 
         group.setOnCheckedChangeListener((group1, checkedId) -> {
             dialog.dismiss();
