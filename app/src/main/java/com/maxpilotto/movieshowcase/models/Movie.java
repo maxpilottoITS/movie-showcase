@@ -107,7 +107,7 @@ public class Movie implements Storable {
 //        values.put(MovieTable._ID, id);
         values.put(MovieTable.COLUMN_TITLE, title);
         values.put(MovieTable.COLUMN_OVERVIEW, overview);
-        values.put(MovieTable.COLUMN_RELEASE_DATE, releaseDate.getTimeInMillis());
+        values.put(MovieTable.COLUMN_RELEASE_DATE, releaseDate != null ? releaseDate.getTimeInMillis() : 0);
         values.put(MovieTable.COLUMN_POSTER_PATH, posterPath);
         values.put(MovieTable.COLUMN_COVER_PATH, coverPath);
         values.put(MovieTable.COLUMN_VOTE_AVERAGE, voteAverage);
