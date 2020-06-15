@@ -40,11 +40,11 @@ public class LandscapeMovieHolder extends MovieHolder {
             callback.onClick(movie);
         });
 
-        favourite.setImageResource(movie.getFavourite() ? R.drawable.heart : R.drawable.heart_outline);
+        favourite.setImageResource(movie.getFavourite() ? R.drawable.ic_heart : R.drawable.ic_heart_outline);
         favourite.setOnClickListener(v -> {
             Boolean state = movie.toggleFavourite();
 
-            ((ImageView)v).setImageResource(state ? R.drawable.heart : R.drawable.heart_outline);
+            ((ImageView)v).setImageResource(state ? R.drawable.ic_heart : R.drawable.ic_heart_outline);
 
             callback.onFavourite(movie);
         });
