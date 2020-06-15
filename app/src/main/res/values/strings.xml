@@ -15,4 +15,6 @@
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
     <string name="themeTitle">Select theme</string>
+    <string name="favourites">Favourites</string>
+    <string name="emptyFavouriteList">No favourited movies</string>
 </resources>

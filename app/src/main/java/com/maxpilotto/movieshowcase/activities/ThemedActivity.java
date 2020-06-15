@@ -2,7 +2,6 @@ package com.maxpilotto.movieshowcase.activities;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -30,7 +29,7 @@ public class ThemedActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar, menu);
+        getMenuInflater().inflate(R.menu.toolbar_detail, menu);
 
         return true;
     }
@@ -39,30 +38,34 @@ public class ThemedActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.toggleTheme:
-                new ThemeDialog(AppCompatDelegate.getDefaultNightMode())
-                        .setCallback(id -> {
-                            switch (id) {
-                                case R.id.auto:
-                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                                    } else {
-                                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                                    }
-                                    break;
-
-                                case R.id.light:
-                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-                                    break;
-
-                                case R.id.dark:
-                                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-                                    break;
-                            }
-                        })
-                        .show(getSupportFragmentManager(), null);
-                break;
+                showThemeDialog();
+                return true;
         }
 
-        return true;
+        return false;
+    }
+
+    protected void showThemeDialog() {
+        new ThemeDialog(AppCompatDelegate.getDefaultNightMode())
+                .setCallback(id -> {
+                    switch (id) {
+                        case R.id.auto:
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                            } else {
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+                            }
+                            break;
+
+                        case R.id.light:
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                            break;
+
+                        case R.id.dark:
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                            break;
+                    }
+                })
+                .show(getSupportFragmentManager(), null);
     }
 }
