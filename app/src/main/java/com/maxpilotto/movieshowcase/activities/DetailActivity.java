@@ -20,6 +20,8 @@ import static com.maxpilotto.movieshowcase.util.Util.coverOf;
 import static com.maxpilotto.movieshowcase.util.Util.posterOf;
 
 public class DetailActivity extends ThemedActivity {
+    public static final String ID_EXTRA = "movie.id.extra";
+
     private TextView title;
     private TextView overview;
     private TextView userRating;
@@ -66,7 +68,7 @@ public class DetailActivity extends ThemedActivity {
 
     private void loadContent() {
         RequestManager glide = Glide.with(this);
-        Integer id = getIntent().getIntExtra(MainActivity.ID_EXTRA, 0);
+        Integer id = getIntent().getIntExtra(ID_EXTRA, 0);
         Cursor cursor = getContentResolver().query(
                 MovieProvider.URI_MOVIES,
                 null,

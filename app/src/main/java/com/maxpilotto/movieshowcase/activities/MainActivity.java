@@ -30,7 +30,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ThemedActivity {
-    public static final String ID_EXTRA = "movie.id.extra"; //TODO move to the DetailActivity
     public static final String DO_UPDATE_EXTRA = "service.do_update.extra";
     public static final String LAST_PAGE_EXTRA = "service.last_page.extra";
 
@@ -149,7 +148,7 @@ public class MainActivity extends ThemedActivity {
             @Override
             public void onClick(Movie item) {
                 Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                intent.putExtra(ID_EXTRA, item.getId());
+                intent.putExtra(DetailActivity.ID_EXTRA, item.getId());
 
                 startActivity(intent);
             }

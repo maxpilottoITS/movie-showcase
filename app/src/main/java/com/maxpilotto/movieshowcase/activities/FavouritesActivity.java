@@ -4,12 +4,10 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.loader.app.LoaderManager;
 import androidx.loader.content.CursorLoader;
 import androidx.loader.content.Loader;
@@ -17,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
@@ -29,7 +26,7 @@ import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.maxpilotto.movieshowcase.activities.MainActivity.ID_EXTRA;
+import static com.maxpilotto.movieshowcase.activities.DetailActivity.ID_EXTRA;
 
 public class FavouritesActivity extends ThemedActivity implements LoaderManager.LoaderCallbacks<Cursor> {
     private final static int LOADER_ID = 124515131;
@@ -62,8 +59,6 @@ public class FavouritesActivity extends ThemedActivity implements LoaderManager.
 
             @Override
             public void onFavourite(Movie item) {
-                //TODO Remove if already favourited
-
                 getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable._ID + "=" + item.getId(), null);
             }
 

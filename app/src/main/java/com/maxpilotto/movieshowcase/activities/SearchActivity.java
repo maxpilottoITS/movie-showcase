@@ -1,6 +1,5 @@
 package com.maxpilotto.movieshowcase.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
@@ -9,11 +8,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.Switch;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,13 +26,9 @@ import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.sheets.SearchFilterSheet;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.models.MovieDecoder;
-import com.maxpilotto.movieshowcase.persistance.MovieProvider;
-import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
-
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,19 +60,17 @@ public class SearchActivity extends ThemedActivity {
             @Override
             public void onClick(Movie item) {
                 Intent i = new Intent(SearchActivity.this,DetailActivity.class);
-                i.putExtra(MainActivity.ID_EXTRA, item.getId());
+                i.putExtra(DetailActivity.ID_EXTRA, item.getId());
 
                 startActivity(i);
             }
 
             @Override
-            public void onFavourite(Movie item) {
-                getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable._ID + "=" + item.getId(), null);
+            public void onFavourite(Movie item) {   //FIXME Hide these options
             }
 
             @Override
             public void onRate(Movie item) {
-
             }
         });
 
