@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,17 @@ public class FavouritesActivity extends ThemedActivity implements LoaderManager.
     private RecyclerView list;
     private MovieAdapter adapter;
     private List<Movie> dataSource;
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Loader loader = getSupportLoaderManager().getLoader(LOADER_ID);
+
+        if (loader != null) {
+            loader.forceLoad();
+        }
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -34,6 +34,8 @@ public class DetailActivity extends ThemedActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
+        setupToolbar();
+
         title = findViewById(R.id.title);
         overview = findViewById(R.id.overview);
         userRating = findViewById(R.id.userRating);
@@ -43,8 +45,6 @@ public class DetailActivity extends ThemedActivity {
         orientation = getResources().getConfiguration().orientation;
 
         loadContent();
-
-        setupToolbar();
     }
 
     @Override
