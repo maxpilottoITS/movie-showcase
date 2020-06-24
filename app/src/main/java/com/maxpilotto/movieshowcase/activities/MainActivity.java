@@ -20,6 +20,7 @@ import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
+import com.maxpilotto.movieshowcase.modals.sheets.ProgressSheet;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.persistance.MovieProvider;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
@@ -40,7 +41,7 @@ public class MainActivity extends ThemedActivity {
     private DataProvider dataProvider;
     private Boolean doUpdate = true;
     private Integer lastPage = 1;
-    //    private ProgressDialog loadingDialog;
+    private ProgressSheet progressSheet;
     private List<Movie> dataSource = new ArrayList<>();
 
     @Override
@@ -64,7 +65,7 @@ public class MainActivity extends ThemedActivity {
 
         loadContent();
 
-//        loadingDialog.show();
+        setLoading(true);
 
         if (doUpdate) {
             dataProvider.getMovies(getContentResolver(), 1, movies -> {
@@ -72,13 +73,16 @@ public class MainActivity extends ThemedActivity {
                 adapter.notifyDataSetChanged();
                 doUpdate = false;
 
-//            loadingDialog.dismiss();
+                setLoading(true);
+
                 Toast.makeText(getApplicationContext(), "Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
         } else {
             dataProvider.restoreMovies(getContentResolver(), lastPage, movies -> {
                 dataSource.addAll(movies);
                 adapter.notifyDataSetChanged();
+
+                setLoading(true);
 
                 Toast.makeText(getApplicationContext(), "Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
@@ -100,11 +104,11 @@ public class MainActivity extends ThemedActivity {
                 break;
 
             case R.id.favourites:
-                startActivity(new Intent(this,FavouritesActivity.class));
+                startActivity(new Intent(this, FavouritesActivity.class));
                 break;
 
             case R.id.search:
-                startActivity(new Intent(this,SearchActivity.class));
+                startActivity(new Intent(this, SearchActivity.class));
                 break;
         }
 
@@ -118,23 +122,30 @@ public class MainActivity extends ThemedActivity {
             return;
         }
 
-//        loadingDialog.show();
+        setLoading(true);
+
+        lastPage = 1;
 
         dataProvider.getMovies(getContentResolver(), 1, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
 
             adapter.notifyDataSetChanged();
-//            shouldUpdate = false;
 
-//            loadingDialog.dismiss();
+            setLoading(false);
         });
     }
 
+    private void setLoading(boolean loading) {
+        if (loading) {
+            progressSheet.show(getSupportFragmentManager(), null);
+        } else {
+            progressSheet.dismiss();
+        }
+    }
+
     private void loadContent() {
-//        loadingDialog = new ProgressDialog(this);
-//        loadingDialog.setTitle(R.string.loading);
-//        loadingDialog.setMessage(getString(R.string.loadingMessage));
+        progressSheet = new ProgressSheet();
         dataProvider = DataProvider.get();
 
         adapter = new MovieAdapter(dataSource);
@@ -187,14 +198,15 @@ public class MainActivity extends ThemedActivity {
 
                 if (!recyclerView.canScrollVertically(1) && dy > 0 && dataProvider.hasInternet()) {
                     lastPage++;
-//                    loadingDialog.show();
+
+                    setLoading(true);
 
                     dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
                         dataSource.addAll(movies);
 
                         adapter.notifyDataSetChanged();
 
-//                        loadingDialog.dismiss();
+                        setLoading(false);
                     });
 
                     Log.d(App.TAG, "Reached the end");
