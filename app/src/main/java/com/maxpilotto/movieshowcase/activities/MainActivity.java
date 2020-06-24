@@ -57,13 +57,6 @@ public class MainActivity extends ThemedActivity {
         setContentView(R.layout.activity_main);
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        list = findViewById(R.id.listView);
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        refreshNoMovies = findViewById(R.id.refreshNoMovies);
-
-        adapter = new MovieAdapter(dataSource);
-        dataProvider = DataProvider.get();
-
         if (savedInstanceState != null) {
             doUpdate = savedInstanceState.getBoolean(DO_UPDATE_EXTRA, true);
             lastPage = savedInstanceState.getInt(LAST_PAGE_EXTRA, 1);
@@ -142,7 +135,9 @@ public class MainActivity extends ThemedActivity {
 //        loadingDialog = new ProgressDialog(this);
 //        loadingDialog.setTitle(R.string.loading);
 //        loadingDialog.setMessage(getString(R.string.loadingMessage));
+        dataProvider = DataProvider.get();
 
+        adapter = new MovieAdapter(dataSource);
         adapter.setEmptyView(findViewById(R.id.emptyView));
         adapter.setMovieCallback(new MovieCellCallback() {
             @Override
@@ -171,16 +166,19 @@ public class MainActivity extends ThemedActivity {
             }
         });
 
+        refreshNoMovies = findViewById(R.id.refreshNoMovies);
         refreshNoMovies.setOnClickListener(v -> {
             refreshDataSource();
         });
 
+        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(() -> {
             swipeRefreshLayout.setRefreshing(false);
 
             refreshDataSource();
         });
 
+        list = findViewById(R.id.listView);
         list.setAdapter(adapter);
         list.setOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
