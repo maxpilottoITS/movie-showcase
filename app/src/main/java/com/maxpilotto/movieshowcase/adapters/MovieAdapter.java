@@ -18,6 +18,12 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
     private List<Movie> source;
     private MovieCellCallback callback;
     private View emptyView;
+    private boolean showActions = true;
+
+    public MovieAdapter(List<Movie> source,boolean showActions) {
+        this.source = source;
+        this.showActions = showActions;
+    }
 
     public MovieAdapter(List<Movie> source) {
         this.source = source;
@@ -40,7 +46,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
-        holder.bind(source.get(position), callback);
+        holder.bind(source.get(position), callback, showActions);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class LandscapeMovieHolder extends MovieHolder {
     }
 
     @Override
-    public void bind(Movie movie, MovieCellCallback callback) {
+    public void bind(Movie movie, MovieCellCallback callback, boolean showActions) {
         if (!movie.getPosterPath().isEmpty()) { //TODO Load the empty image
             Glide.with(context)
                     .load(posterOf(movie.getPosterPath()))
@@ -39,6 +39,11 @@ public class LandscapeMovieHolder extends MovieHolder {
         root.setOnClickListener(v -> {
             callback.onClick(movie);
         });
+
+        if (!showActions) {
+            favourite.setVisibility(View.INVISIBLE);
+            rate.setVisibility(View.INVISIBLE);
+        }
 
         favourite.setImageResource(movie.getFavourite() ? R.drawable.ic_heart : R.drawable.ic_heart_outline);
         favourite.setOnClickListener(v -> {

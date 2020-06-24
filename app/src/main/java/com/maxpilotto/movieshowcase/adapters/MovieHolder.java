@@ -20,5 +20,5 @@ public abstract class MovieHolder extends RecyclerView.ViewHolder {
         this.context = itemView.getContext();
     }
 
-    abstract public void bind(Movie item, MovieCellCallback callback);
+    abstract public void bind(Movie item, MovieCellCallback callback,boolean showActions);
 }

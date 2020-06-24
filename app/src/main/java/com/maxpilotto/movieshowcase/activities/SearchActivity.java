@@ -54,15 +54,12 @@ public class SearchActivity extends ThemedActivity {
         setupToolbar();
 
         dataSource = new ArrayList<>();
-        adapter = new MovieAdapter(dataSource);
+        adapter = new MovieAdapter(dataSource, false);
         adapter.setEmptyView(findViewById(R.id.emptyView));
         adapter.setMovieCallback(new MovieCellCallback() {
             @Override
             public void onClick(Movie item) {
-                Intent i = new Intent(SearchActivity.this,DetailActivity.class);
-                i.putExtra(DetailActivity.ID_EXTRA, item.getId());
 
-                startActivity(i);
             }
 
             @Override
