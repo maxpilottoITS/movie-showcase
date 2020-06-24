@@ -88,9 +88,11 @@ public class DetailActivity extends ThemedActivity {
 
         if (orientation == Configuration.ORIENTATION_PORTRAIT) {
             glide.load(movie.getCoverPath().isEmpty() ? R.drawable.noimg : coverOf(movie.getCoverPath()))
+                    .error(R.drawable.noimg)
                     .into((ImageView) findViewById(R.id.backdrop));
         } else if (orientation == Configuration.ORIENTATION_LANDSCAPE) {
             glide.load(movie.getPosterPath().isEmpty() ? R.drawable.noimg : posterOf(movie.getPosterPath()))
+                    .error(R.drawable.noimg)
                     .into((ImageView) findViewById(R.id.poster));
         }
     }

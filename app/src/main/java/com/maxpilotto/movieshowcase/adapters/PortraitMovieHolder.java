@@ -27,11 +27,10 @@ public class PortraitMovieHolder extends MovieHolder {
 
     @Override
     public void bind(Movie movie, MovieCellCallback callback, boolean showActions) {
-        if (!movie.getPosterPath().isEmpty()) { //TODO Load the empty image
-            Glide.with(context)
-                    .load(posterOf(movie.getPosterPath()))
-                    .into(poster);
-        }
+        Glide.with(context)
+                .load(posterOf(movie.getPosterPath()))
+                .error(R.drawable.noimg)
+                .into(poster);
 
         root.setOnClickListener(v -> {
             callback.onClick(movie);
