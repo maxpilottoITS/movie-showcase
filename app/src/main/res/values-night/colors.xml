@@ -11,4 +11,5 @@
     <color name="textColorSecondary">#eeeeee</color>
     <color name="textColor">#eeeeee</color>
     <color name="colorControlNormal">#eeeeee</color>
+    <color name="shadowColor">#aaaaaa</color>
 </resources>

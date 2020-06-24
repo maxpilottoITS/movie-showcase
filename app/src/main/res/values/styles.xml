@@ -10,14 +10,15 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="android:statusBarColor">@color/statusBarColor</item>
         <item name="colorSecondary">@color/colorSecondary</item>
-        <item name="colorSurface">@color/colorPrimary</item>
-        <item name="android:colorBackground">@color/colorPrimary</item>
-        <item name="android:background">@color/colorPrimary</item>
+        <item name="colorSurface">@color/colorSurface</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
+        <item name="android:background">@color/colorBackground</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="colorControlNormal">@color/colorControlNormal</item>
+        <item name="android:shadowColor">@color/shadowColor</item>
     </style>
 
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">

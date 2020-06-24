@@ -9,6 +9,12 @@
         app:showAsAction="always" />
 
     <item
+        android:id="@+id/search"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_search"
+        android:title="@string/search" />
+
+    <item
         android:id="@+id/toggleTheme"
         android:icon="@drawable/ic_theme"
         android:title="@string/themeTitle"

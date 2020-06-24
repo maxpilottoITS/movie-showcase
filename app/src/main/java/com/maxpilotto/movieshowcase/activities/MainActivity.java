@@ -110,6 +110,10 @@ public class MainActivity extends ThemedActivity {
             case R.id.favourites:
                 startActivity(new Intent(this,FavouritesActivity.class));
                 break;
+
+            case R.id.search:
+                startActivity(new Intent(this,SearchActivity.class));
+                break;
         }
 
         return true;

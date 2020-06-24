@@ -11,4 +11,5 @@
     <color name="textColorSecondary">#202020</color>
     <color name="textColor">#202020</color>
     <color name="colorControlNormal">#202020</color>
+    <color name="shadowColor">#11303030</color>
 </resources>
