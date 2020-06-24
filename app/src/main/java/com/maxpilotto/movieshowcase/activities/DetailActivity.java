@@ -36,7 +36,7 @@ public class DetailActivity extends ThemedActivity {
         overview = findViewById(R.id.overview);
         userRating = findViewById(R.id.userRating);
         personalRating = findViewById(R.id.personalRating);
-        year = findViewById(R.id.year);
+        year = findViewById(R.id.yearText);
 
         orientation = getResources().getConfiguration().orientation;
 

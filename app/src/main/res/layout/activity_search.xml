@@ -14,7 +14,18 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary" />
+            android:background="?attr/colorPrimary">
+
+            <EditText
+                android:id="@+id/searchbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingStart="15dp"
+                android:paddingEnd="10dp"
+                android:layout_marginEnd="15dp"
+                android:hint="@string/query"/>
+
+        </androidx.appcompat.widget.Toolbar>
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -41,7 +52,5 @@
         android:textAlignment="center"
         android:text="@string/emptyMovieList"
         android:textSize="26sp" />
-
-    <include layout="@layout/sheet_search_query" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

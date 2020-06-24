@@ -1,10 +1,16 @@
 package com.maxpilotto.movieshowcase.activities;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -12,6 +18,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,9 +28,13 @@ import com.maxpilotto.kon.JsonObject;
 import com.maxpilotto.kon.net.JsonService;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
+import com.maxpilotto.movieshowcase.modals.sheets.SearchFilterSheet;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.models.MovieDecoder;
+import com.maxpilotto.movieshowcase.persistance.MovieProvider;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
+import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
 
 import org.json.JSONObject;
@@ -36,85 +47,49 @@ import static com.maxpilotto.movieshowcase.util.Util.asyncTask;
 public class SearchActivity extends ThemedActivity {
     private RecyclerView listView;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private TextView emoji;
-    private Switch adultSwitch;
 
     private MovieAdapter adapter;
     private List<Movie> dataSource;
-    private TextView query;
-    private TextView year;
-    private Spinner langSpinner;
-    private Button apply;
+    private EditText searchBar;
+    private String language;
+    private String year;
+    private boolean adultContent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        query = findViewById(R.id.query);
-        year = findViewById(R.id.year);
-        langSpinner = findViewById(R.id.langSpinner);
+        setupToolbar();
 
         dataSource = new ArrayList<>();
         adapter = new MovieAdapter(dataSource);
         adapter.setEmptyView(findViewById(R.id.emptyView));
+        adapter.setMovieCallback(new MovieCellCallback() {
+            @Override
+            public void onClick(Movie item) {
+                Intent i = new Intent(SearchActivity.this,DetailActivity.class);
+                i.putExtra(MainActivity.ID_EXTRA, item.getId());
+
+                startActivity(i);
+            }
+
+            @Override
+            public void onFavourite(Movie item) {
+                getContentResolver().update(MovieProvider.URI_MOVIES, item.allValues(), MovieTable._ID + "=" + item.getId(), null);
+            }
+
+            @Override
+            public void onRate(Movie item) {
+
+            }
+        });
 
         listView = findViewById(R.id.listView);
         listView.setAdapter(adapter);
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            apply.callOnClick();
-        });
-
-        adultSwitch = findViewById(R.id.adultSwitch);
-        adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) {
-                emoji.setText("\uD83D\uDE08");
-            } else {
-                emoji.setText("\uD83D\uDE07");
-            }
-        });
-
-        emoji = findViewById(R.id.emoji);
-        emoji.setText("\uD83D\uDE07");
-
-        apply = findViewById(R.id.apply);
-        apply.setOnClickListener(v -> {
-            if (year.getText().toString().isEmpty()) {
-                Toast.makeText(this,getString(R.string.emptyYear),Toast.LENGTH_SHORT).show();
-
-                return;
-            }
-
-            if (query.getText().toString().isEmpty()) {
-                Toast.makeText(this,getString(R.string.emptyQuery),Toast.LENGTH_SHORT).show();
-
-                return;
-            }
-
-            String route = buildRoute();
-
-            asyncTask(new AsyncTaskSimpleCallback() {
-                List<Movie> movies;
-
-                @Override
-                public void run(AsyncTask task) {
-                    JsonObject json = JsonService.fetchObject(route);
-                    movies = json.getObjectList("results", MovieDecoder::decode);
-                }
-
-                @Override
-                public void onComplete() {
-                    dataSource.clear();
-                    dataSource.addAll(movies);
-                    adapter.notifyDataSetChanged();
-                }
-            });
-        });
+        swipeRefreshLayout.setOnRefreshListener(this::performSearch);
 
         switch (getResources().getConfiguration().orientation) {
             case Configuration.ORIENTATION_PORTRAIT:
@@ -128,24 +103,84 @@ public class SearchActivity extends ThemedActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_search, menu);
+
+        return true;
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!super.onOptionsItemSelected(item)) {
-            if (item.getItemId() == android.R.id.home) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
                 finish();
+                break;
+
+            case R.id.filter:
+                new SearchFilterSheet()
+                        .setCallback((language, adultContent, year) -> {
+                            this.language = language;
+                            this.adultContent = adultContent;
+                            this.year = year;
+                        })
+                        .show(getSupportFragmentManager(), null);
+        }
+
+        return true;
+    }
+
+    private void setupToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        searchBar = toolbar.findViewById(R.id.searchbar);
+        searchBar.setOnKeyListener((v, keyCode, event) -> {
+            if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                performSearch();
 
                 return true;
             }
-        }
 
-        return false;
+            return false;
+        });
     }
 
-    private String buildRoute() {
-        return Routes.search(
-                query.getText().toString(),
-                langSpinner.getSelectedItem().toString(),
-                adultSwitch.isChecked(),
-                Integer.parseInt(year.getText().toString())
+    private void performSearch() {
+        if (searchBar.getText().toString().isEmpty()) {
+            Toast.makeText(this, getString(R.string.emptyQuery), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String route = Routes.search(
+                searchBar.getText().toString(),
+                language,
+                adultContent,
+                year
         );
+
+        swipeRefreshLayout.setRefreshing(true);
+
+        asyncTask(new AsyncTaskSimpleCallback() {
+            List<Movie> movies;
+
+            @Override
+            public void run(AsyncTask task) {
+                JsonObject json = JsonService.fetchObject(route);   //TODO try-catch
+
+                Log.d("JSON", json.toString());
+
+                movies = json.getObjectList("results", MovieDecoder::decode);
+            }
+
+            @Override
+            public void onComplete() {
+                dataSource.clear();
+                dataSource.addAll(movies);
+                adapter.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
     }
 }

@@ -2,47 +2,16 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@drawable/bg_bottom_sheet"
-    app:behavior_hideable="false"
-    app:behavior_peekHeight="20dp"
-    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="15dp"
-        android:text="@string/search"
-        android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/query"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:ems="10"
-        android:hint="@string/query"
-        android:inputType="textPersonName"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:textSize="14sp"
-        app:layout_constraintEnd_toEndOf="@+id/title"
-        app:layout_constraintStart_toStartOf="@+id/title"
-        app:layout_constraintTop_toBottomOf="@+id/title" />
+    android:layout_height="wrap_content">
 
     <Spinner
         android:id="@+id/langSpinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
         android:entries="@array/langs"
         app:layout_constraintBottom_toBottomOf="@+id/textView123"
-        app:layout_constraintEnd_toEndOf="@+id/query"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView123"
         app:layout_constraintTop_toTopOf="@+id/textView123" />
 
@@ -50,12 +19,13 @@
         android:id="@+id/textView123"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="40dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="30dp"
         android:text="@string/lang"
         app:layout_constraintEnd_toStartOf="@+id/langSpinner"
-        app:layout_constraintStart_toStartOf="@+id/query"
-        app:layout_constraintTop_toBottomOf="@+id/query" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
         android:id="@+id/adultSwitch"
@@ -68,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView123" />
 
     <TextView
-        android:id="@+id/emoji"
+        android:id="@+id/emojiText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="60dp"
@@ -79,30 +49,31 @@
         app:layout_constraintTop_toTopOf="@+id/adultSwitch" />
 
     <EditText
-        android:id="@+id/year"
+        android:id="@+id/yearText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:ems="10"
         android:hint="@string/yearEd"
         android:inputType="number"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         android:textSize="14sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView"
         app:layout_constraintEnd_toEndOf="@+id/adultSwitch"
-        app:layout_constraintStart_toStartOf="@+id/adultSwitch"
-        app:layout_constraintTop_toBottomOf="@+id/adultSwitch" />
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toTopOf="@+id/textView" />
 
-    <Button
-        android:id="@+id/apply"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        android:text="@string/apply"
+        android:text="@string/yearEd"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/year"/>
+        app:layout_constraintEnd_toStartOf="@+id/yearText"
+        app:layout_constraintStart_toStartOf="@+id/adultSwitch"
+        app:layout_constraintTop_toBottomOf="@+id/adultSwitch" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

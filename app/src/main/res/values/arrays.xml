@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="langs">
+        <item>@string/anyLang</item>
         <item>aa</item>
         <item>ab</item>
         <item>af</item>
@@ -186,4 +187,5 @@
         <item>za</item>
         <item>zu</item>
     </string-array>
+    <string name="anyLang">Any</string>
 </resources>

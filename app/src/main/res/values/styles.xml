@@ -12,7 +12,7 @@
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSurface">@color/colorSurface</item>
         <item name="android:colorBackground">@color/colorBackground</item>
-        <item name="android:background">@color/colorBackground</item>
+<!--        <item name="android:background">@color/colorBackground</item>-->
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
@@ -21,6 +21,7 @@
         <item name="android:shadowColor">@color/shadowColor</item>
     </style>
 
+    <!-- Toolbar -->
     <style name="ToolbarStyle" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/ToolbarTextAppearance</item>
     </style>
@@ -29,11 +30,22 @@
         <item name="android:textColor">?attr/colorOnPrimary</item>
     </style>
 
+    <!-- Alert dialog -->
     <style name="Alert.Button.Positive" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
     </style>
 
     <style name="Alert.Button.Neutral" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">?android:attr/textColorPrimary</item>
+    </style>
+
+    <!-- Bottom sheet -->
+    <style name="BottomSheetStyle" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/bg_bottom_sheet</item>
+    </style>
+
+    <style name="BottomSheet" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
     </style>
 </resources>

@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ThemedActivity {
-    public static final String ID_EXTRA = "movie.id.extra";
+    public static final String ID_EXTRA = "movie.id.extra"; //TODO move to the DetailActivity
     public static final String DO_UPDATE_EXTRA = "service.do_update.extra";
     public static final String LAST_PAGE_EXTRA = "service.last_page.extra";
 
