@@ -8,10 +8,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 
 public class MovieProvider extends ContentProvider {
@@ -83,12 +85,24 @@ public class MovieProvider extends ContentProvider {
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
         if (uriMatcher.match(uri) == ALL_MOVIES) {
-            long result = database.getWritableDatabase().insert(MovieTable.NAME, null, values);
-            String resultString = ContentResolver.SCHEME_CONTENT + "://" + BASE_PATH_MOVIES + "/" + result;
+            SQLiteDatabase db = database.getWritableDatabase();
+            boolean exists = false;
 
-            getContext().getContentResolver().notifyChange(uri, null);
+            try {
+                int id = values.getAsInteger(MovieTable.COLUMN_REMOTE_ID);
 
-            return Uri.parse(resultString);
+                exists = db.query(MovieTable.NAME,null,MovieTable.COLUMN_REMOTE_ID + "=" + id,null,null,null,null).getCount() == 1;
+            } catch (Exception e) {
+                Log.d(App.TAG, "Database was empty");
+            }
+
+            if (!exists) {
+                long result = db.insert(MovieTable.NAME, null, values);
+                String resultString = ContentResolver.SCHEME_CONTENT + "://" + BASE_PATH_MOVIES + "/" + result;
+
+                getContext().getContentResolver().notifyChange(uri, null);
+                return Uri.parse(resultString);
+            }
         }
 
         return null;

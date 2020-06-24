@@ -24,7 +24,9 @@ import static com.maxpilotto.movieshowcase.util.Util.calendarOf;
  */
 @JsonEncodable
 public class Movie implements Storable {
-    private Integer id;
+    @JsonProperty(name = "id")
+    private Integer remoteId;
+
     private String title;
     private String overview;
 
@@ -46,6 +48,9 @@ public class Movie implements Storable {
 
     @JsonProperty(isIgnored = true)
     private Integer rating;
+
+    @JsonProperty(isIgnored =  true)
+    private Integer id;
 
     public static List<Movie> parseList(Cursor cursor) {
         List<Movie> list = new ArrayList<>();
@@ -69,11 +74,11 @@ public class Movie implements Storable {
         this.rating = cursor.getInt(cursor.getColumnIndex(MovieTable.COLUMN_RATING));
     }
 
-    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath,  Integer voteAverage) {
-        this(id, title, overview, releaseDate, posterPath, coverPath, voteAverage, false, 0);
+    public Movie(Integer remoteId, String title, String overview, Calendar releaseDate, String posterPath, String coverPath,  Integer voteAverage) {
+        this(remoteId, -1,title, overview, releaseDate, posterPath, coverPath, voteAverage, false, 0);
     }
 
-    public Movie(Integer id, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, Integer voteAverage, Boolean favourite, Integer rating) {
+    public Movie(Integer id, Integer remoteId, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, Integer voteAverage, Boolean favourite, Integer rating) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -105,6 +110,7 @@ public class Movie implements Storable {
         ContentValues values = new ContentValues();
 
 //        values.put(MovieTable._ID, id);
+        values.put(MovieTable.COLUMN_REMOTE_ID,remoteId);
         values.put(MovieTable.COLUMN_TITLE, title);
         values.put(MovieTable.COLUMN_OVERVIEW, overview);
         values.put(MovieTable.COLUMN_RELEASE_DATE, releaseDate != null ? releaseDate.getTimeInMillis() : 0);
@@ -126,6 +132,10 @@ public class Movie implements Storable {
 
     public Integer getYear() {
         return releaseDate.get(Calendar.YEAR);
+    }
+
+    public Integer getRemoteId() {
+        return remoteId;
     }
 
     public Boolean toggleFavourite() {
