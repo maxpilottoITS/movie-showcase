@@ -1,8 +1,8 @@
 # MovieShowcase
-Demo application that shows a library of recent movies that can be favourite and rated
+Demo application that shows a library of recent movies that can be favourited and rated
 
 ## Building
-Before building the application you need an api key, you can retrieve the api key from your 
+Before you build the application you'll need an api key, you can retrieve the api key from your 
 [TMDB Account settings page](https://www.themoviedb.org/settings/api)
 
 The key must be saved somewhere as a string name `api_key`, it is recommended to store this key in 
