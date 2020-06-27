@@ -27,4 +27,5 @@
     <string name="emptyYear">Year cannot be empty</string>
     <string name="emptyQuery">Query must be provided</string>
     <string name="filter">Filter</string>
+    <string name="anyLang">Any</string>
 </resources>

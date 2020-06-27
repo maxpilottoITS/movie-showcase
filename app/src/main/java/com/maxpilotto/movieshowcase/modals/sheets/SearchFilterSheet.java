@@ -1,8 +1,6 @@
 package com.maxpilotto.movieshowcase.modals.sheets;
 
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +21,7 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
     private TextView yearText;
     private Spinner langSpinner;
     private DismissCallback callback;
+    private String[] langCodes;
 
     @Nullable
     @Override
@@ -42,6 +41,8 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
             }
         });
 
+        langCodes = getResources().getStringArray(R.array.lang_codes);
+
         return v;
     }
 
@@ -54,6 +55,8 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
 
         if (language.equals(getString(R.string.anyLang))) {
             language = "";
+        } else {
+            language = langCodes[langSpinner.getSelectedItemPosition()];
         }
 
         callback.onDismiss(
