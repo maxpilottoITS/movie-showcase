@@ -1,5 +1,6 @@
 package com.maxpilotto.movieshowcase.modals.sheets;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,14 +15,28 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.maxpilotto.movieshowcase.R;
+import com.maxpilotto.movieshowcase.activities.SearchActivity;
+
+import java.util.Arrays;
 
 public class SearchFilterSheet extends BottomSheetDialogFragment {
     private TextView emojiText;
     private Switch adultSwitch;
     private TextView yearText;
     private Spinner langSpinner;
-    private DismissCallback callback;
     private String[] langCodes;
+    private SearchActivity receiver;
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
+        if (context instanceof SearchActivity) {
+            receiver = (SearchActivity) context;
+        } else {
+            throw new RuntimeException("Receiver activity is not of type SearchActivity");
+        }
+    }
 
     @Nullable
     @Override
@@ -41,7 +56,7 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
             }
         });
 
-        langCodes = getResources().getStringArray(R.array.lang_codes);
+        loadData();
 
         return v;
     }
@@ -59,20 +74,18 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
             language = langCodes[langSpinner.getSelectedItemPosition()];
         }
 
-        callback.onDismiss(
-                language,
-                adultSwitch.isChecked(),
-                year
-        );
+        receiver.setLanguage(language);
+        receiver.setAdultContent(adultSwitch.isChecked());
+        receiver.setYear(year);
     }
 
-    public SearchFilterSheet setCallback(DismissCallback callback) {
-        this.callback = callback;
+    private void loadData() {
+        langCodes = getResources().getStringArray(R.array.lang_codes);
 
-        return this;
-    }
+        adultSwitch.setChecked(receiver.isAdultContent());
+        yearText.setText(receiver.getYear());
 
-    public interface DismissCallback {
-        void onDismiss(String language, boolean adultContent, String year);
+        int index = Arrays.asList(langCodes).indexOf(receiver.getLanguage());
+        langSpinner.setSelection(index);
     }
 }

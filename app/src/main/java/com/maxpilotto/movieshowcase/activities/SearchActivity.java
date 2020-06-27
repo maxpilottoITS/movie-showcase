@@ -103,13 +103,7 @@ public class SearchActivity extends ThemedActivity {
                 break;
 
             case R.id.filter:
-                new SearchFilterSheet()
-                        .setCallback((language, adultContent, year) -> {
-                            this.language = language;
-                            this.adultContent = adultContent;
-                            this.year = year;
-                        })
-                        .show(getSupportFragmentManager(), null);
+                new SearchFilterSheet().show(getSupportFragmentManager(), null);
         }
 
         return true;
@@ -168,5 +162,29 @@ public class SearchActivity extends ThemedActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public boolean isAdultContent() {
+        return adultContent;
+    }
+
+    public void setAdultContent(boolean adultContent) {
+        this.adultContent = adultContent;
     }
 }
