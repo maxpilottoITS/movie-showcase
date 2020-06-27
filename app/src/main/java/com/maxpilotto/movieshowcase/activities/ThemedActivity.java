@@ -19,11 +19,7 @@ public class ThemedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_UNSPECIFIED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-            } else {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-            }
+            setFollowSystemTheme();
         }
     }
 
@@ -50,11 +46,7 @@ public class ThemedActivity extends AppCompatActivity {
                 .setCallback(id -> {
                     switch (id) {
                         case R.id.auto:
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
-                            } else {
-                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
-                            }
+                            setFollowSystemTheme();
                             break;
 
                         case R.id.light:
@@ -67,5 +59,13 @@ public class ThemedActivity extends AppCompatActivity {
                     }
                 })
                 .show(getSupportFragmentManager(), null);
+    }
+
+    protected void setFollowSystemTheme() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+        } else {
+            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY);
+        }
     }
 }
