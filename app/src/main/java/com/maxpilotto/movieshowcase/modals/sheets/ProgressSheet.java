@@ -12,6 +12,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.maxpilotto.movieshowcase.R;
 
 public class ProgressSheet extends BottomSheetDialogFragment {
+    public ProgressSheet() {
+        setCancelable(false);
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

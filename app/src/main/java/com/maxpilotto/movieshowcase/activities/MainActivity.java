@@ -31,6 +31,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends ThemedActivity {
+    private static final String SHEET_TAG = "MainActivity.ProgressSheet.Tag";
+
     public static final String DO_UPDATE_EXTRA = "service.do_update.extra";
     public static final String LAST_PAGE_EXTRA = "service.last_page.extra";
 
@@ -73,7 +75,7 @@ public class MainActivity extends ThemedActivity {
                 adapter.notifyDataSetChanged();
                 doUpdate = false;
 
-                setLoading(true);
+                setLoading(false);
 
                 Toast.makeText(getApplicationContext(), "Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
@@ -82,7 +84,7 @@ public class MainActivity extends ThemedActivity {
                 dataSource.addAll(movies);
                 adapter.notifyDataSetChanged();
 
-                setLoading(true);
+                setLoading(false);
 
                 Toast.makeText(getApplicationContext(), "Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
             });
@@ -138,7 +140,9 @@ public class MainActivity extends ThemedActivity {
 
     private void setLoading(boolean loading) {
         if (loading) {
-            progressSheet.show(getSupportFragmentManager(), null);
+            if (getSupportFragmentManager().findFragmentByTag(SHEET_TAG) == null) {
+                progressSheet.show(getSupportFragmentManager(), SHEET_TAG);
+            }
         } else {
             progressSheet.dismiss();
         }
