@@ -12,12 +12,13 @@ public final class Routes {
                 "&page=" + page;
     }
 
-    public static String search(String query, String language, boolean includeAdult, String year) {
+    public static String search(String query, String language, boolean includeAdult, String region, String year) {
         return SEARCH +
                 "?api_key=" + API_KEY +
-                "&language=" + language +
                 "&query=" + query +
+                "&language=" + language +
                 "&include_adult=" + includeAdult +
+                "&region=" + region +
                 "&year=" + year;
     }
 

@@ -15,6 +15,7 @@
 <!--        <item name="android:background">@color/colorBackground</item>-->
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
         <item name="android:textColorPrimary">@color/textColorPrimary</item>
+<!--        TODO Grey version-->
         <item name="android:textColorSecondary">@color/textColorSecondary</item>
         <item name="android:textColor">@color/textColor</item>
         <item name="colorControlNormal">@color/colorControlNormal</item>
@@ -47,5 +48,10 @@
     <style name="BottomSheet" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="bottomSheetStyle">@style/BottomSheetStyle</item>
+    </style>
+
+    <style name="categoryLabel">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+        <item name="android:textSize">12sp</item>
     </style>
 </resources>

@@ -43,8 +43,10 @@ public class SearchActivity extends ThemedActivity {
     private List<Movie> dataSource;
     private EditText searchBar;
     private String language;
+    private String region;
     private String year;
     private boolean adultContent;
+    private boolean offlineSearch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -137,6 +139,7 @@ public class SearchActivity extends ThemedActivity {
                 searchBar.getText().toString(),
                 language,
                 adultContent,
+                region,
                 year
         );
 
@@ -162,6 +165,22 @@ public class SearchActivity extends ThemedActivity {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
+    }
+
+    public boolean isOfflineSearch() {
+        return offlineSearch;
+    }
+
+    public void setOfflineSearch(boolean offlineSearch) {
+        this.offlineSearch = offlineSearch;
     }
 
     public String getLanguage() {

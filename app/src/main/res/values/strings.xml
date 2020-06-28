@@ -28,4 +28,8 @@
     <string name="emptyQuery">Query must be provided</string>
     <string name="filter">Filter</string>
     <string name="anyLang">Any</string>
+    <string name="categoryOptional">Optional</string>
+    <string name="searchOffline">Search offline</string>
+    <string name="categoryLocal">Localisation</string>
+    <string name="categoryQuery">Query</string>
 </resources>

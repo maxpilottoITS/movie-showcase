@@ -22,9 +22,12 @@ import java.util.Arrays;
 public class SearchFilterSheet extends BottomSheetDialogFragment {
     private TextView emojiText;
     private Switch adultSwitch;
+    private Switch offlineSwitch;
     private TextView yearText;
     private Spinner langSpinner;
+    private Spinner regionSpinner;
     private String[] langCodes;
+    private String[] regionCodes;
     private SearchActivity receiver;
 
     @Override
@@ -47,6 +50,8 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
         adultSwitch = v.findViewById(R.id.adultSwitch);
         yearText = v.findViewById(R.id.yearText);
         langSpinner = v.findViewById(R.id.langSpinner);
+        regionSpinner = v.findViewById(R.id.regionSpinner);
+        offlineSwitch = v.findViewById(R.id.offlineSwitch);
 
         adultSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
@@ -54,6 +59,9 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
             } else {
                 emojiText.setText("\uD83D\uDE07");
             }
+        });
+        offlineSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            receiver.setOfflineSearch(isChecked);
         });
 
         loadData();
@@ -67,6 +75,7 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
 
         String language = langSpinner.getSelectedItem().toString();
         String year = yearText.getText().toString();
+        String region = regionSpinner.getSelectedItem().toString();
 
         if (language.equals(getString(R.string.anyLang))) {
             language = "";
@@ -74,18 +83,28 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
             language = langCodes[langSpinner.getSelectedItemPosition()];
         }
 
+        if (region.equals(getString(R.string.anyLang))) {
+            region = "";
+        }else {
+            region = regionCodes[regionSpinner.getSelectedItemPosition()];
+        }
+
         receiver.setLanguage(language);
         receiver.setAdultContent(adultSwitch.isChecked());
         receiver.setYear(year);
+        receiver.setRegion(region);
+        receiver.setOfflineSearch(offlineSwitch.isChecked());
     }
 
     private void loadData() {
         langCodes = getResources().getStringArray(R.array.lang_codes);
+        regionCodes = getResources().getStringArray(R.array.region_codes);
+
+        langSpinner.setSelection(Arrays.asList(langCodes).indexOf(receiver.getLanguage()));
+        regionSpinner.setSelection(Arrays.asList(regionCodes).indexOf(receiver.getRegion()));
 
         adultSwitch.setChecked(receiver.isAdultContent());
+        offlineSwitch.setChecked(receiver.isOfflineSearch());
         yearText.setText(receiver.getYear());
-
-        int index = Arrays.asList(langCodes).indexOf(receiver.getLanguage());
-        langSpinner.setSelection(index);
     }
 }
