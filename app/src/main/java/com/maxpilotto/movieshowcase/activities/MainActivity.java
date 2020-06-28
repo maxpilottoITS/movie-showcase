@@ -154,6 +154,21 @@ public class MainActivity extends ThemedActivity {
 
         adapter = new MovieAdapter(dataSource);
         adapter.setEmptyView(findViewById(R.id.emptyView));
+        adapter.setPositionChangedCallback(newPosition -> {
+            if (newPosition == dataSource.size() - 6 && dataProvider.hasInternet()) {
+                lastPage++;
+
+                setLoading(true);
+
+                dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
+                    dataSource.addAll(movies);
+
+                    adapter.notifyDataSetChanged();
+
+                    setLoading(false);
+                });
+            }
+        });
         adapter.setMovieCallback(new MovieCellCallback() {
             @Override
             public void onClick(Movie item) {
@@ -195,28 +210,28 @@ public class MainActivity extends ThemedActivity {
 
         list = findViewById(R.id.listView);
         list.setAdapter(adapter);
-        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                if (!recyclerView.canScrollVertically(1) && dy > 0 && dataProvider.hasInternet()) {
-                    lastPage++;
-
-                    setLoading(true);
-
-                    dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
-                        dataSource.addAll(movies);
-
-                        adapter.notifyDataSetChanged();
-
-                        setLoading(false);
-                    });
-
-                    Log.d(App.TAG, "Reached the end");
-                }
-            }
-        });
+//        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                super.onScrolled(recyclerView, dx, dy);
+//
+//                if (!recyclerView.canScrollVertically(1) && dy > 0 && dataProvider.hasInternet()) {
+////                    lastPage++;
+////
+////                    setLoading(true);
+////
+////                    dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
+////                        dataSource.addAll(movies);
+////
+////                        adapter.notifyDataSetChanged();
+////
+////                        setLoading(false);
+////                    });
+////
+////                    Log.d(App.TAG, "Reached the end");
+//                }
+//            }
+//        });
 
         switch (getResources().getConfiguration().orientation) {
             case Configuration.ORIENTATION_PORTRAIT:

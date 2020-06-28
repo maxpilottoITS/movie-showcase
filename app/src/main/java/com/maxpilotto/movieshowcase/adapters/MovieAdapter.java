@@ -17,6 +17,7 @@ import java.util.List;
 public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
     private List<Movie> source;
     private MovieCellCallback callback;
+    private PositionChangedCallback positionChangedCallback;
     private View emptyView;
     private boolean showActions = true;
 
@@ -46,6 +47,10 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
+        if (positionChangedCallback != null) {
+            positionChangedCallback.onPositionChanged(position);
+        }
+
         holder.bind(source.get(position), callback, showActions);
     }
 
@@ -72,5 +77,13 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     public void setMovieCallback(MovieCellCallback callback) {
         this.callback = callback;
+    }
+
+    public void setPositionChangedCallback(PositionChangedCallback positionChangedCallback) {
+        this.positionChangedCallback = positionChangedCallback;
+    }
+
+    public interface PositionChangedCallback {
+        void onPositionChanged(int newPosition);
     }
 }
