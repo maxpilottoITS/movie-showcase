@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -36,6 +37,13 @@ import java.util.List;
 import static com.maxpilotto.movieshowcase.util.Util.asyncTask;
 
 public class SearchActivity extends ThemedActivity {
+    private static final String LANGUAGE_EXTRA = "language.extra";
+    private static final String REGION_EXTRA = "region.extra";
+    private static final String YEAR_EXTRA = "year.extra";
+    private static final String ADULT_EXTRA = "adult.extra";
+    private static final String OFFLINE_EXTRA = "offline.extra";
+    private static final String QUERY_EXTRA = "query.extra";
+
     private RecyclerView listView;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -47,6 +55,18 @@ public class SearchActivity extends ThemedActivity {
     private String year;
     private boolean adultContent;
     private boolean offlineSearch;
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        outState.putString(QUERY_EXTRA, searchBar.getText().toString());
+        outState.putString(LANGUAGE_EXTRA, language);
+        outState.putString(REGION_EXTRA, region);
+        outState.putString(YEAR_EXTRA, year);
+        outState.putBoolean(ADULT_EXTRA, adultContent);
+        outState.putBoolean(OFFLINE_EXTRA, offlineSearch);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +98,17 @@ public class SearchActivity extends ThemedActivity {
 
         swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
         swipeRefreshLayout.setOnRefreshListener(this::performSearch);
+
+        if (savedInstanceState != null) {
+            language = savedInstanceState.getString(LANGUAGE_EXTRA);
+            region = savedInstanceState.getString(REGION_EXTRA);
+            year = savedInstanceState.getString(YEAR_EXTRA);
+            adultContent = savedInstanceState.getBoolean(ADULT_EXTRA);
+            offlineSearch = savedInstanceState.getBoolean(OFFLINE_EXTRA);
+            searchBar.setText(savedInstanceState.getString(QUERY_EXTRA));
+
+            performSearch();
+        }
 
         switch (getResources().getConfiguration().orientation) {
             case Configuration.ORIENTATION_PORTRAIT:

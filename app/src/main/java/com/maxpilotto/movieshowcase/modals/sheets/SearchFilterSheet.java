@@ -1,11 +1,13 @@
 package com.maxpilotto.movieshowcase.modals.sheets;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.activities.SearchActivity;
@@ -39,6 +42,22 @@ public class SearchFilterSheet extends BottomSheetDialogFragment {
         } else {
             throw new RuntimeException("Receiver activity is not of type SearchActivity");
         }
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        Dialog d = super.onCreateDialog(savedInstanceState);
+
+        d.setOnShowListener(dialog -> {
+            FrameLayout sheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            BottomSheetBehavior behavior = BottomSheetBehavior.from(sheet);
+
+            behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+
+        });
+
+        return d;
     }
 
     @Nullable
