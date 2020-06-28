@@ -2,6 +2,7 @@ package com.maxpilotto.movieshowcase.activities;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.PersistableBundle;
@@ -27,11 +28,14 @@ import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.sheets.SearchFilterSheet;
 import com.maxpilotto.movieshowcase.models.Movie;
 import com.maxpilotto.movieshowcase.models.MovieDecoder;
+import com.maxpilotto.movieshowcase.persistance.MovieProvider;
+import com.maxpilotto.movieshowcase.persistance.tables.MovieTable;
 import com.maxpilotto.movieshowcase.protocols.AsyncTaskSimpleCallback;
 import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.maxpilotto.movieshowcase.util.Util.asyncTask;
@@ -166,14 +170,6 @@ public class SearchActivity extends ThemedActivity {
             return;
         }
 
-        String route = Routes.search(
-                searchBar.getText().toString(),
-                language,
-                adultContent,
-                region,
-                year
-        );
-
         swipeRefreshLayout.setRefreshing(true);
 
         asyncTask(new AsyncTaskSimpleCallback() {
@@ -181,11 +177,43 @@ public class SearchActivity extends ThemedActivity {
 
             @Override
             public void run(AsyncTask task) {
-                JsonObject json = JsonService.fetchObject(route);   //TODO try-catch
+                if (offlineSearch) {
+                    String title = MovieTable.COLUMN_TITLE + " LIKE \"%" + searchBar.getText() + "%\"";
+                    String releaseDate = year.isEmpty() ? "" : " AND " + MovieTable.COLUMN_RELEASE_DATE + "=" + year;
+                    Cursor cursor = getContentResolver().query(
+                            MovieProvider.URI_MOVIES,
+                            null,
+                            title + releaseDate,
+                            null,
+                            null
+                    );
 
-                Log.d("JSON", json.toString());
+                    movies = Movie.parseList(cursor);
 
-                movies = json.getObjectList("results", MovieDecoder::decode);
+                    for (Movie m : movies) {
+                        Log.d("TAG", "run: " + m);
+                    }
+                } else {
+                    String route = Routes.search(
+                            searchBar.getText().toString(),
+                            language,
+                            adultContent,
+                            region,
+                            year
+                    );
+
+                    try {
+                        JsonObject json = JsonService.fetchObject(route);   //TODO try-catch everywhere
+
+                        if (json.isEmpty() || !json.has("results")) {
+                            movies = new ArrayList<>();
+                        } else {
+                            movies = json.getObjectList("results", MovieDecoder::decode);
+                        }
+                    } catch (Exception e) {
+                        movies = new ArrayList<>();
+                    }
+                }
             }
 
             @Override

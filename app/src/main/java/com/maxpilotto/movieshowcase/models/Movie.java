@@ -64,6 +64,7 @@ public class Movie implements Storable {
 
     public Movie(Cursor cursor) {
         this.id = cursor.getInt(cursor.getColumnIndex(MovieTable._ID));
+        this.remoteId = cursor.getInt(cursor.getColumnIndex(MovieTable.COLUMN_REMOTE_ID));
         this.title = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_TITLE));
         this.overview = cursor.getString(cursor.getColumnIndex(MovieTable.COLUMN_OVERVIEW));
         this.releaseDate = calendarOf(cursor.getLong(cursor.getColumnIndex(MovieTable.COLUMN_RELEASE_DATE)));
@@ -75,12 +76,13 @@ public class Movie implements Storable {
     }
 
     public Movie(Integer remoteId, String title, String overview, Calendar releaseDate, String posterPath, String coverPath,  Integer voteAverage) {
-        this(remoteId, -1,title, overview, releaseDate, posterPath, coverPath, voteAverage, false, 0);
+        this(0, remoteId,title, overview, releaseDate, posterPath, coverPath, voteAverage, false, 0);
     }
 
     public Movie(Integer id, Integer remoteId, String title, String overview, Calendar releaseDate, String posterPath, String coverPath, Integer voteAverage, Boolean favourite, Integer rating) {
         this.id = id;
         this.title = title;
+        this.remoteId = remoteId;
         this.overview = overview;
         this.releaseDate = releaseDate;
         this.posterPath = posterPath;
@@ -94,6 +96,7 @@ public class Movie implements Storable {
     public String toString() {
         return "Movie{" +
                 "id=" + id +
+                ", remoteId=" + remoteId +
                 ", title='" + title + '\'' +
                 ", overview='" + overview + '\'' +
                 ", releaseDate=" + releaseDate +
