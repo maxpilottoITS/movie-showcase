@@ -23,6 +23,8 @@
                 android:paddingStart="15dp"
                 android:paddingEnd="10dp"
                 android:layout_marginEnd="15dp"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:hint="@string/labelQuery"/>
 
         </androidx.appcompat.widget.Toolbar>
