@@ -1,11 +1,9 @@
 package com.maxpilotto.movieshowcase.activities;
 
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -35,7 +33,6 @@ import com.maxpilotto.movieshowcase.protocols.MovieCellCallback;
 import com.maxpilotto.movieshowcase.util.Routes;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import static com.maxpilotto.movieshowcase.util.Util.asyncTask;
@@ -166,7 +163,7 @@ public class SearchActivity extends ThemedActivity {
 
     private void performSearch() {
         if (searchBar.getText().toString().isEmpty()) {
-            Toast.makeText(this, getString(R.string.emptyQuery), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.errorEmptyQuery), Toast.LENGTH_SHORT).show();
             return;
         }
 

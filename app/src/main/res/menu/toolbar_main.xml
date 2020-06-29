@@ -12,7 +12,7 @@
         android:id="@+id/search"
         app:showAsAction="always"
         android:icon="@drawable/ic_search"
-        android:title="@string/search" />
+        android:title="@string/labelSearch" />
 
     <item
         android:id="@+id/toggleTheme"

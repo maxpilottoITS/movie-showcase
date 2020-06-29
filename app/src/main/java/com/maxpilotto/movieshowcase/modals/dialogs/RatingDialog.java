@@ -29,7 +29,7 @@ public class RatingDialog extends DialogFragment {
         ratingBar.setRating(rating);
 
         return new AlertDialog.Builder(getContext())
-                .setTitle(R.string.ratingTitle)
+                .setTitle(R.string.titleRating)
                 .setView(content)
                 .setPositiveButton(getString(R.string.ok), (dialog, which) -> {
                     callback.onRate(ratingBar.getProgress());

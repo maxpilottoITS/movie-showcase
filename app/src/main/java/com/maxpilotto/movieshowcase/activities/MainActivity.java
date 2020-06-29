@@ -3,7 +3,6 @@ package com.maxpilotto.movieshowcase.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -16,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
@@ -119,7 +117,7 @@ public class MainActivity extends ThemedActivity {
 
     private void refreshDataSource() {
         if (!dataProvider.hasInternet()) {
-            Toast.makeText(this, R.string.noInternet, Toast.LENGTH_LONG).show();
+            Toast.makeText(this, R.string.errorNoInternet, Toast.LENGTH_LONG).show();
 
             return;
         }
