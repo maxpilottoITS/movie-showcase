@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="titleRating">Valuta film</string>
+    <string name="userRating">Valutazione utente: %d/10</string>
+    <string name="yourRating">Tua valutazione: %d/5</string>
+    <string name="year">Annoy: %d</string>
+    <string name="loadingMessage">Attendere ...</string>
+    <string name="labelAdult">Includi 18+</string>
+    <string name="labelRegion">Regione</string>
+    <string name="labelSearch">Ricerca</string>
+    <string name="labelQuery">Query</string>
+    <string name="labelLang">Lingua</string>
+    <string name="labelYear">Anno</string>
+    <string name="labelSearchOffline">Cerca offline</string>
+    <string name="apply">Applica</string>
+    <string name="refresh">Ricarica</string>
+    <string name="filter">Filtro</string>
+    <string name="anyLang">Qualsiasi</string>
+    <string name="loading">Caricamento</string>
+    <string name="favourites">Preferiti</string>
+    <string name="themeAuto">Auto (Sistema)</string>
+    <string name="themeLight">Chiaro</string>
+    <string name="themeDark">Scuro</string>
+    <string name="themeTitle">Seleziona tema</string>
+    <string name="emptyFavouriteList">Nessun preferito</string>
+    <string name="emptyMovieList">Nessun film trovato</string>
+    <string name="errorNoInternet">Nessuna connessione</string>
+    <string name="errorEmptyYear">L\'anno non può essere vuoto</string>
+    <string name="errorEmptyQuery">La query non può essere vuota</string>
+    <string name="categoryOptional">Opzionali</string>
+    <string name="categoryLocal">Localizzazione</string>
+</resources>
