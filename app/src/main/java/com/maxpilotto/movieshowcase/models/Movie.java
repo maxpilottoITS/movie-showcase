@@ -31,7 +31,7 @@ public class Movie implements Storable {
     private String overview;
 
     @JsonDate
-    @JsonProperty(name = "release_date", isOptional = true, defaultValue = "null")      //FIXME Crashes if the date is empty
+    @JsonProperty(name = "release_date", isOptional = true, defaultValue = "null")
     private Calendar releaseDate;
 
     @JsonProperty(name = "poster_path",isOptional = true)

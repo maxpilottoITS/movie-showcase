@@ -95,9 +95,6 @@ public final class DataProvider {
                     totalResults = json.getInt("total_results");
 
                     for (Movie m : remoteMovies) {
-                        //TODO Check if the movie is already there by searching the description and title together,
-                        // since the ID from the API service is different from the one stored locally
-
                         contentResolver.insert(MovieProvider.URI_MOVIES, m.values());
                     }
                 }
