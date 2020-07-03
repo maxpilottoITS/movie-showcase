@@ -187,10 +187,6 @@ public class SearchActivity extends ThemedActivity {
                     );
 
                     movies = Movie.parseList(cursor);
-
-                    for (Movie m : movies) {
-                        Log.d("TAG", "run: " + m);
-                    }
                 } else {
                     String route = Routes.search(
                             searchBar.getText().toString(),

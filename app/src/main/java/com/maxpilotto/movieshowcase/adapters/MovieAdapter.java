@@ -47,7 +47,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull MovieHolder holder, int position) {
-        if (positionChangedCallback != null) {
+        if (positionChangedCallback != null && !isEmpty()) {
             positionChangedCallback.onPositionChanged(position);
         }
 

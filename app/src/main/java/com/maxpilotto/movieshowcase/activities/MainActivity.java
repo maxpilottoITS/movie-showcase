@@ -3,6 +3,7 @@ package com.maxpilotto.movieshowcase.activities;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
 import com.maxpilotto.movieshowcase.adapters.MovieAdapter;
 import com.maxpilotto.movieshowcase.modals.dialogs.RatingDialog;
@@ -75,7 +77,7 @@ public class MainActivity extends ThemedActivity {
 
                 setLoading(false);
 
-                Toast.makeText(getApplicationContext(), "Movies loaded: " + dataSource.size(), Toast.LENGTH_LONG).show();
+                Log.d(App.TAG, "Movies loaded: " + dataSource.size());
             });
         } else {
             dataProvider.restoreMovies(getContentResolver(), lastPage, movies -> {
@@ -84,7 +86,7 @@ public class MainActivity extends ThemedActivity {
 
                 setLoading(false);
 
-                Toast.makeText(getApplicationContext(), "Movies restored: " + dataSource.size(), Toast.LENGTH_LONG).show();
+                Log.d(App.TAG, "Movies loaded: " + dataSource.size());
             });
         }
     }
@@ -153,7 +155,7 @@ public class MainActivity extends ThemedActivity {
         adapter = new MovieAdapter(dataSource);
         adapter.setEmptyView(findViewById(R.id.emptyView));
         adapter.setPositionChangedCallback(newPosition -> {
-            if (newPosition == dataSource.size() - 6 && dataProvider.hasInternet()) {
+            if (newPosition == dataSource.size() - 8 && dataProvider.hasInternet()) {
                 lastPage++;
 
                 setLoading(true);
@@ -165,6 +167,8 @@ public class MainActivity extends ThemedActivity {
 
                     setLoading(false);
                 });
+
+                Log.d(App.TAG, "Loading new page");
             }
         });
         adapter.setMovieCallback(new MovieCellCallback() {
@@ -208,28 +212,6 @@ public class MainActivity extends ThemedActivity {
 
         list = findViewById(R.id.listView);
         list.setAdapter(adapter);
-//        list.setOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-//                super.onScrolled(recyclerView, dx, dy);
-//
-//                if (!recyclerView.canScrollVertically(1) && dy > 0 && dataProvider.hasInternet()) {
-////                    lastPage++;
-////
-////                    setLoading(true);
-////
-////                    dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
-////                        dataSource.addAll(movies);
-////
-////                        adapter.notifyDataSetChanged();
-////
-////                        setLoading(false);
-////                    });
-////
-////                    Log.d(App.TAG, "Reached the end");
-//                }
-//            }
-//        });
 
         switch (getResources().getConfiguration().orientation) {
             case Configuration.ORIENTATION_PORTRAIT:

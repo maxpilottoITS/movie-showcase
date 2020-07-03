@@ -113,8 +113,6 @@ public final class DataProvider {
                                 getResultsPerPage()
                         )
                 ));
-
-                Log.d(App.TAG, "Loaded records: " + movies.size());
             }
 
             @Override
