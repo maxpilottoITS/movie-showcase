@@ -48,14 +48,12 @@ public class MainActivity extends ThemedActivity {
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            super.onScrolled(recyclerView, dx, dy);
-
             LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
             int visibleCount = layoutManager.getChildCount();
             int total = layoutManager.getItemCount();
             int pastVisible = layoutManager.findFirstVisibleItemPosition();
 
-            if (pastVisible + visibleCount >= total - listPageThreshold && !listBusy) {
+            if (pastVisible + visibleCount >= total - listPageThreshold && !listBusy && dy > 1) {
                 lastPage++;
                 listBusy = true;
 
@@ -70,7 +68,10 @@ public class MainActivity extends ThemedActivity {
                 });
 
                 Log.d(App.TAG, "Loading new page");
+
             }
+
+            super.onScrolled(recyclerView, dx, dy);
         }
     };
 
