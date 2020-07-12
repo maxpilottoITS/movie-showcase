@@ -38,7 +38,6 @@ public class MainActivity extends ThemedActivity {
 
     private RecyclerView list;
     private MovieAdapter adapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private Button refreshNoMovies;
     private DataProvider dataProvider;
     private Boolean doUpdate = true;
@@ -200,13 +199,6 @@ public class MainActivity extends ThemedActivity {
 
         refreshNoMovies = findViewById(R.id.refreshNoMovies);
         refreshNoMovies.setOnClickListener(v -> {
-            refreshDataSource();
-        });
-
-        swipeRefreshLayout = findViewById(R.id.swipeRefreshLayout);
-        swipeRefreshLayout.setOnRefreshListener(() -> {
-            swipeRefreshLayout.setRefreshing(false);
-
             refreshDataSource();
         });
 

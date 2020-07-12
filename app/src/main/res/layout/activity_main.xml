@@ -14,51 +14,43 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"/>
+            android:background="?attr/colorPrimary" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/swipeRefreshLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-        </androidx.recyclerview.widget.RecyclerView>
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </androidx.recyclerview.widget.RecyclerView>
 
     <LinearLayout
         android:id="@+id/emptyView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="center"
         android:gravity="center"
+        android:orientation="vertical"
         android:visibility="invisible">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:textSize="26sp"
-            android:text="@string/emptyMovieList"/>
+            android:text="@string/emptyMovieList"
+            android:textSize="26sp" />
 
         <Button
             android:id="@+id/refreshNoMovies"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/refresh"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_marginTop="30dp"/>
+            android:layout_marginTop="30dp"
+            android:text="@string/refresh" />
 
     </LinearLayout>
-
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
