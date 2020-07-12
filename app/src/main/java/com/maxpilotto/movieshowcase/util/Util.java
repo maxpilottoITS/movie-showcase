@@ -25,11 +25,11 @@ public final class Util {
     }
 
     public static String posterOf(String path) {
-        return !path.equals("null") ? "https://image.tmdb.org/t/p/w500/" + path : path;
+        return path != null && !path.equals("null") ? "https://image.tmdb.org/t/p/w500/" + path : path;
     }
 
     public static String coverOf(String path) {
-        return !path.equals("null") ? "https://image.tmdb.org/t/p/original/" + path : path;
+        return path != null && !path.equals("null") ? "https://image.tmdb.org/t/p/original/" + path : path;
     }
 
     public static AsyncTask asyncTask(Boolean autoStart, AsyncTaskSimpleCallback callback) {

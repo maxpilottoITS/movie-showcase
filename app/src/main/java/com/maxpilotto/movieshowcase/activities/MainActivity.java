@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.maxpilotto.movieshowcase.App;
 import com.maxpilotto.movieshowcase.R;
@@ -44,6 +43,36 @@ public class MainActivity extends ThemedActivity {
     private Integer lastPage = 1;
     private ProgressSheet progressSheet;
     private List<Movie> dataSource = new ArrayList<>();
+    private boolean listBusy = false;
+    private int listPageThreshold;
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+            LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+            int visibleCount = layoutManager.getChildCount();
+            int total = layoutManager.getItemCount();
+            int pastVisible = layoutManager.findFirstVisibleItemPosition();
+
+            if (pastVisible + visibleCount >= total - listPageThreshold && !listBusy) {
+                lastPage++;
+                listBusy = true;
+
+                setLoading(true);
+
+                dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
+                    dataSource.addAll(movies);
+                    adapter.notifyDataSetChanged();
+                    listBusy = false;
+
+                    setLoading(false);
+                });
+
+                Log.d(App.TAG, "Loading new page");
+            }
+        }
+    };
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -68,11 +97,14 @@ public class MainActivity extends ThemedActivity {
 
         setLoading(true);
 
+        listBusy = true;
+
         if (doUpdate) {
             dataProvider.getMovies(getContentResolver(), 1, movies -> {
                 dataSource.addAll(movies);
                 adapter.notifyDataSetChanged();
                 doUpdate = false;
+                listBusy = false;
 
                 setLoading(false);
 
@@ -82,6 +114,7 @@ public class MainActivity extends ThemedActivity {
             dataProvider.restoreMovies(getContentResolver(), lastPage, movies -> {
                 dataSource.addAll(movies);
                 adapter.notifyDataSetChanged();
+                listBusy = false;
 
                 setLoading(false);
 
@@ -126,12 +159,13 @@ public class MainActivity extends ThemedActivity {
         setLoading(true);
 
         lastPage = 1;
+        listBusy = true;
 
         dataProvider.getMovies(getContentResolver(), 1, movies -> {
             dataSource.clear();
             dataSource.addAll(movies);
-
             adapter.notifyDataSetChanged();
+            listBusy = false;
 
             setLoading(false);
         });
@@ -148,28 +182,29 @@ public class MainActivity extends ThemedActivity {
     }
 
     private void loadContent() {
+        LinearLayoutManager layoutManager;
+
+        switch (getResources().getConfiguration().orientation) {
+            case Configuration.ORIENTATION_PORTRAIT:
+                layoutManager = new GridLayoutManager(this, 2);
+                listPageThreshold = 6;  // Around 3 rows
+                break;
+
+            case Configuration.ORIENTATION_LANDSCAPE:
+                layoutManager = new LinearLayoutManager(this);
+                listPageThreshold = 5;
+                break;
+
+            default:
+                layoutManager = null;
+                break;
+        }
+
         progressSheet = new ProgressSheet();
         dataProvider = DataProvider.get();
 
         adapter = new MovieAdapter(dataSource);
         adapter.setEmptyView(findViewById(R.id.emptyView));
-        adapter.setPositionChangedCallback(newPosition -> {
-            if (newPosition == dataSource.size() - 8 && dataProvider.hasInternet()) {
-                lastPage++;
-
-                setLoading(true);
-
-                dataProvider.getMovies(getContentResolver(), lastPage, movies -> {
-                    dataSource.addAll(movies);
-
-                    adapter.notifyDataSetChanged();
-
-                    setLoading(false);
-                });
-
-                Log.d(App.TAG, "Loading new page");
-            }
-        });
         adapter.setMovieCallback(new MovieCellCallback() {
             @Override
             public void onClick(Movie item) {
@@ -203,16 +238,8 @@ public class MainActivity extends ThemedActivity {
         });
 
         list = findViewById(R.id.listView);
+        list.setLayoutManager(layoutManager);
         list.setAdapter(adapter);
-
-        switch (getResources().getConfiguration().orientation) {
-            case Configuration.ORIENTATION_PORTRAIT:
-                list.setLayoutManager(new GridLayoutManager(this, 2));
-                break;
-
-            case Configuration.ORIENTATION_LANDSCAPE:
-                list.setLayoutManager(new LinearLayoutManager(this));
-                break;
-        }
+        list.setOnScrollListener(scrollListener);
     }
 }
